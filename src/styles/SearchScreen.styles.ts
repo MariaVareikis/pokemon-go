@@ -9,6 +9,7 @@ export const SEARCH_SCREEN_STYLES = {
   mainVStack: {
     space: 'lg',
     mt: '$6',
+    pb: '$20', // Bottom padding for floating button
   },
   title: {
     fontSize: '$2xl',
@@ -56,6 +57,13 @@ export const SEARCH_SCREEN_STYLES = {
     fontSize: '$md',
     fontWeight: '$bold',
   },
+  spinnerProps: {
+    size: 'large',
+    color: '$white',
+  },
+  disabledButton: {
+    opacity: 0.5,
+  },
   pokemonContainer: {
     bg: COLORS.WHITE_10,
     borderRadius: '$xl',
@@ -80,6 +88,8 @@ export const SEARCH_SCREEN_STYLES = {
     color: COLORS.WHITE_80,
     mb: '$4',
   },
+
+  // Type Tags Styles
   typesHStack: {
     space: 'sm',
     flexWrap: 'wrap',
@@ -96,8 +106,35 @@ export const SEARCH_SCREEN_STYLES = {
     fontSize: '$sm',
     fontWeight: '$medium',
   },
-  spinnerProps: {
-    size: 'large',
-    color: '$white',
-  },
+
+  // Catch Button Styles (moved from inline)
+  catchButtonStyle: {
+    marginTop: 16,
+    borderRadius: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    minWidth: 100,
+    minHeight: 40,
+    backgroundColor: 'rgba(220, 53, 69, 0.95)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  } as const,
+
+  catchButtonIcon: {
+    width: 18,
+    height: 18,
+  } as const,
+
+  catchButtonText: {
+    color: 'white',
+    fontWeight: 'bold' as const,
+    fontSize: 15,
+  } as const,
 } as const;

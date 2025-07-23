@@ -1,60 +1,55 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { getPokemon } from '../services/pokemonService';
-import { PokemonSearchState } from '../types/pokemonTypes';
+import { getPokemon } from '@/src/services/pokemonService';
+import { PokemonSearchState } from '@/src/types/pokemonTypes';
+import { SEARCH_ERROR_MESSAGES } from '@/src/constants/hooks';
+
+const INITIAL_SEARCH_STATE: PokemonSearchState = {
+  isSearching: false,
+  searchError: '',
+};
 
 export const usePokemonSearch = () => {
-  const [state, setState] = useState<PokemonSearchState>({
-    searchedPokemon: undefined,
-    isSearching: false,
-    searchError: '',
-  });
+  const [searchState, setSearchState] =
+    useState<PokemonSearchState>(INITIAL_SEARCH_STATE);
 
-  const executeSearch = async (query: string) => {
-    if (!query.trim()) return;
+  const searchForPokemon = async (pokemonQuery: string) => {
+    if (!pokemonQuery.trim()) return;
 
-    setState((prev) => ({ ...prev, isSearching: true, searchError: '' }));
+    setSearchState({
+      searchedPokemon: searchState.searchedPokemon,
+      isSearching: true,
+      searchError: '',
+    });
 
     try {
-      const pokemon = await getPokemon(query);
-      
-      setState({
-        searchedPokemon: pokemon,
+      const foundPokemon = await getPokemon(pokemonQuery);
+      setSearchState({
+        searchedPokemon: foundPokemon,
         isSearching: false,
         searchError: '',
       });
-    } catch (error) {
-      let errorMessage = 'שגיאה בחיפוש Pokemon';
-      
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 404) {
-          errorMessage = 'Pokemon לא נמצא';
-        } else {
-          errorMessage = 'שגיאה בחיבור לשרת';
-        }
-      }
-      
-      setState({
-        searchedPokemon: undefined,
+    } catch (searchError) {
+      const isNotFoundError =
+        axios.isAxiosError(searchError) && searchError.response?.status === 404;
+      const errorMessage = isNotFoundError
+        ? SEARCH_ERROR_MESSAGES.POKEMON_NOT_FOUND
+        : SEARCH_ERROR_MESSAGES.SERVER_CONNECTION_ERROR;
+
+      setSearchState({
         isSearching: false,
         searchError: errorMessage,
       });
     }
   };
 
-  const resetSearchResults = () => {
-    setState({
-      searchedPokemon: undefined,
-      isSearching: false,
-      searchError: '',
-    });
-  };
+  const clearSearchResults = () => setSearchState(INITIAL_SEARCH_STATE);
 
   return {
-    searchedPokemon: state.searchedPokemon,
-    isSearching: state.isSearching,
-    searchError: state.searchError,
-    executeSearch,
-    resetSearchResults,
+    searchedPokemon: searchState.searchedPokemon,
+    isSearching: searchState.isSearching,
+    searchError: searchState.searchError,
+    searchForPokemon,
+    clearSearchResults,
   };
 };
