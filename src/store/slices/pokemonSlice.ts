@@ -5,8 +5,7 @@ import {
   CatchResult,
   PokemonState,
 } from '@/src/types/pokemonTypes';
-
-const TIMING = { CATCH_DELAY_MS: 1500 } as const;
+import { TIMING } from '@/src/constants/storage';
 
 const createCaughtPokemon = (pokemon: Pokemon): CaughtPokemon => ({
   id: pokemon.id,
@@ -32,7 +31,7 @@ export const catchPokemon = createAsyncThunk<
   const { caughtPokemon } = getState().pokemon;
 
   if (caughtPokemon.some(p => p.id === pokemon.id)) {
-    return { success: false, error: `${pokemon.name} уже пойман!` };
+    return { success: false, error: `${pokemon.name}כבר נתפס!` };
   }
 
   await new Promise(resolve => setTimeout(resolve, TIMING.CATCH_DELAY_MS));
@@ -75,7 +74,6 @@ const pokemonSlice = createSlice({
 
 export const { clearError, releasePokemon } = pokemonSlice.actions;
 
-// Селекторы-утилиты
 export const pokemonSelectors = {
   isPokemonCaught: (caughtList: CaughtPokemon[], pokemonId: number) =>
     caughtList.some(p => p.id === pokemonId),

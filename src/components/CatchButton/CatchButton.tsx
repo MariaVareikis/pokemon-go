@@ -1,6 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import { Text, Spinner } from '@gluestack-ui/themed';
+import { Box, Text, Spinner, Pressable } from '@gluestack-ui/themed';
 import { Image } from 'expo-image';
 import { useAppDispatch, useAppSelector } from '@/src/store/hooks';
 import {
@@ -44,7 +43,7 @@ const CatchButton: React.FC<CatchButtonProps> = ({
   };
 
   const getButtonDisplayText = () => {
-    if (isPokemonAlreadyCaught) return 'Уже пойман!';
+    if (isPokemonAlreadyCaught) return 'כבר נתפס!';
     if (isCatching) return CATCH_MESSAGES.BUTTON_CATCHING;
     return CATCH_MESSAGES.BUTTON_CATCH;
   };
@@ -52,25 +51,24 @@ const CatchButton: React.FC<CatchButtonProps> = ({
   const renderButtonContent = () => (
     <>
       {isCatching ? (
-        <Spinner size="small" color="white" style={styles.spinner} />
+        <Spinner {...styles.spinner} />
       ) : (
-        <Image source={pokeballIcon} style={styles.icon} contentFit="contain" />
+        <Image source={pokeballIcon} {...styles.icon} contentFit="contain" />
       )}
-      <Text style={styles.text}>{getButtonDisplayText()}</Text>
+      <Text {...styles.text}>{getButtonDisplayText()}</Text>
     </>
   );
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
+    <Box {...styles.container}>
+      <Pressable
         onPress={handleCatchButtonPress}
         disabled={isButtonInteractionDisabled}
         style={[styles.button, isPokemonAlreadyCaught && styles.disabledButton]}
-        activeOpacity={0.8}
       >
         {renderButtonContent()}
-      </TouchableOpacity>
-    </View>
+      </Pressable>
+    </Box>
   );
 };
 

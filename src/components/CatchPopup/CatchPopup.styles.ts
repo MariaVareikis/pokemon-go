@@ -26,13 +26,13 @@ export const CATCH_POPUP_STYLES = {
     elevation: 10,
   },
   successPopup: {
-    bg: 'rgba(40, 167, 69, 0.95)', 
+    bg: 'rgba(40, 167, 69, 0.95)',
   },
   failurePopup: {
-    bg: 'rgba(220, 53, 69, 0.95)', 
+    bg: 'rgba(220, 53, 69, 0.95)',
   },
   warningPopup: {
-    bg: 'rgba(255, 193, 7, 0.95)', 
+    bg: 'rgba(255, 193, 7, 0.95)',
   },
   iconContainer: {
     mb: '$4',

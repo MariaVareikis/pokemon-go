@@ -4,11 +4,9 @@ import { Image } from 'expo-image';
 import { TouchableOpacity } from 'react-native';
 import { Pokemon } from '@/src/types/pokemonTypes';
 import { SEARCH_SCREEN_STYLES as styles } from '@/src/styles/SearchScreen.styles';
+import { SPINNER_CONFIG } from '@/src/constants/ui';
 import { useAppDispatch, useAppSelector } from '@/src/store/hooks';
-import {
-  catchPokemon,
-  pokemonSelectors,
-} from '@/src/store/slices/pokemonSlice';
+import { catchPokemon, pokemonSelectors } from '@/src/store/slices/pokemonSlice';
 import { CATCH_MESSAGES } from '@/src/constants/catch';
 import CatchPopup from '@/src/components/CatchPopup/CatchPopup';
 import pokeballIcon from '@/src/assets/poke-ball.png';
@@ -21,30 +19,24 @@ interface PokemonInfoProps {
 const PokemonInfo: React.FC<PokemonInfoProps> = ({ pokemon }) => {
   const dispatch = useAppDispatch();
   const { caughtPokemon, isCatching } = useAppSelector(state => state.pokemon);
-
+  
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [pokemonCatchResult, setPokemonCatchResult] = useState({
-    success: false,
-  });
+  const [pokemonCatchResult, setPokemonCatchResult] = useState({ success: false });
 
-  const isPokemonAlreadyCaught = pokemonSelectors.isPokemonCaught(
-    caughtPokemon,
-    pokemon.id,
-  );
-  const pokemonImageUrl =
-    pokemon.sprites.other['official-artwork'].front_default;
+  const isPokemonAlreadyCaught = pokemonSelectors.isPokemonCaught(caughtPokemon, pokemon.id);
+  const pokemonImageUrl = pokemon.sprites.other['official-artwork'].front_default;
   const pokemonDisplayName = pokemon.name;
   const pokemonNumber = pokemon.id;
 
   const handlePokemonCatch = async () => {
     const catchAttemptResult = await dispatch(catchPokemon(pokemon));
-
+    
     if (catchPokemon.fulfilled.match(catchAttemptResult)) {
       setPokemonCatchResult(catchAttemptResult.payload);
     } else {
       setPokemonCatchResult({ success: false });
     }
-
+    
     setIsPopupVisible(true);
   };
 
@@ -68,7 +60,7 @@ const PokemonInfo: React.FC<PokemonInfoProps> = ({ pokemon }) => {
       activeOpacity={0.8}
     >
       {isCatching ? (
-        <Spinner {...SPINNER_CONFIG} />
+        <Spinner {...SPINNER_CONFIG.SMALL_WHITE} />
       ) : (
         <Image
           source={pokeballIcon}
@@ -77,11 +69,12 @@ const PokemonInfo: React.FC<PokemonInfoProps> = ({ pokemon }) => {
         />
       )}
       <Text style={styles.catchButtonText}>
-        {isPokemonAlreadyCaught
+        {isPokemonAlreadyCaught 
           ? 'Already caught!'
           : isCatching
             ? CATCH_MESSAGES.BUTTON_CATCHING
-            : CATCH_MESSAGES.BUTTON_CATCH}
+            : CATCH_MESSAGES.BUTTON_CATCH
+        }
       </Text>
     </TouchableOpacity>
   );

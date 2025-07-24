@@ -6,17 +6,17 @@ export const CATCH_BUTTON_STYLES = {
     right: 0,
     alignItems: 'center',
     zIndex: 1000,
-    paddingHorizontal: 20,
+    paddingHorizontal: '$5',
   },
 
   button: {
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    borderRadius: '$md',
+    paddingHorizontal: '$4',
+    paddingVertical: '$2',
     minWidth: 80,
     minHeight: 36,
-    backgroundColor: 'rgba(220, 53, 69, 0.95)',
-    shadowColor: '#000',
+    bg: 'rgba(220, 53, 69, 0.95)',
+    shadowColor: '$black',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -24,7 +24,7 @@ export const CATCH_BUTTON_STYLES = {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
+    gap: '$1.5',
   } as const,
 
   icon: {
@@ -33,18 +33,18 @@ export const CATCH_BUTTON_STYLES = {
   } as const,
 
   text: {
-    color: 'white',
-    fontWeight: 'bold' as const,
-    fontSize: 14,
+    color: '$white',
+    fontWeight: '$bold',
+    fontSize: '$sm',
   } as const,
 
   spinner: {
-    width: 16,
-    height: 16,
-    size: 'small',
-    color: 'white',
+    size: 'small' as const,
+    color: '$white',
   } as const,
+
   disabledButton: {
     opacity: 0.5,
-  },
+    bg: 'rgba(128, 128, 128, 0.95)',
+  } as const,
 } as const;

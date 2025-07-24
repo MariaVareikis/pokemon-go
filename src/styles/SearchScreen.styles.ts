@@ -9,7 +9,7 @@ export const SEARCH_SCREEN_STYLES = {
   mainVStack: {
     space: 'lg',
     mt: '$6',
-    pb: '$20', // Bottom padding for floating button
+    pb: '$20',
   },
   title: {
     fontSize: '$2xl',
@@ -89,7 +89,6 @@ export const SEARCH_SCREEN_STYLES = {
     mb: '$4',
   },
 
-  // Type Tags Styles
   typesHStack: {
     space: 'sm',
     flexWrap: 'wrap',
@@ -107,7 +106,6 @@ export const SEARCH_SCREEN_STYLES = {
     fontWeight: '$medium',
   },
 
-  // Catch Button Styles (moved from inline)
   catchButtonStyle: {
     marginTop: 16,
     borderRadius: 8,
