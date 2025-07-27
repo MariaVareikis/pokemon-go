@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { Tabs } from 'expo-router';
-import { Text } from 'react-native';
+import { Text } from '@gluestack-ui/themed';
 import { ThemeProvider } from '@react-navigation/native';
 import {
   styles,
@@ -9,12 +9,14 @@ import {
   SCREEN_OPTIONS,
 } from '@/src/styles/TabsLayout.styles';
 
-const createTabOptions = (tabName: keyof typeof TAB_CONFIG) => ({
+type TabName = keyof typeof TAB_CONFIG;
+
+const createTabOptions = (tabName: TabName) => ({
   title: TAB_CONFIG[tabName].label,
   tabBarIcon: () => (
     <Text style={styles.tabIcon}>{TAB_CONFIG[tabName].icon}</Text>
   ),
-  tabBarLabel: ({ children }: { children: React.ReactNode }) => (
+  tabBarLabel: ({ children }: PropsWithChildren) => (
     <Text style={styles.tabLabel}>{children}</Text>
   ),
 });
@@ -22,9 +24,7 @@ const createTabOptions = (tabName: keyof typeof TAB_CONFIG) => ({
 const TabLayout: React.FC = () => {
   return (
     <ThemeProvider value={navigationTheme}>
-      <Tabs
-        screenOptions={SCREEN_OPTIONS}
-      >
+      <Tabs screenOptions={SCREEN_OPTIONS}>
         <Tabs.Screen name="search" options={createTabOptions('search')} />
         <Tabs.Screen name="bag" options={createTabOptions('bag')} />
       </Tabs>

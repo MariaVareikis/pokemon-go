@@ -1,74 +1,43 @@
-export interface PokemonSprites {
-  other: {
-    'official-artwork': {
-      front_default: string;
-    };
-  };
-}
-
-export interface PokemonType {
-  slot: number;
-  type: {
-    name: string;
-    url: string;
-  };
-}
-
-export interface Pokemon {
+export interface PokemonData {
   id: number;
   name: string;
-  sprites: PokemonSprites;
-  types: PokemonType[];
-  height?: number;
-  weight?: number;
-  base_experience?: number;
+  sprites: {
+    other: {
+      'official-artwork': {
+        front_default: string;
+      };
+    };
+  };
+  types: Array<{
+    type: {
+      name: string;
+    };
+  }>;
 }
 
-export interface CaughtPokemon {
+export interface CollectedPokemon {
   id: number;
   name: string;
   imageUrl: string;
   types: string[];
-  caughtAt: string;
-  catchId: string;
+  collectedAt: string;
+  collectionId: string;
 }
 
-export interface PokemonSearchState {
-  searchedPokemon?: Pokemon;
-  isSearching: boolean;
-  searchError: string;
-}
-
-export interface CatchResult {
+export interface CatchAttemptResult {
   success: boolean;
-  pokemon?: CaughtPokemon;
+  pokemon?: CollectedPokemon;
   error?: string;
 }
 
-export interface PokemonState {
-  caughtPokemon: CaughtPokemon[];
-  isLoading: boolean;
+export interface PokemonCollectionState {
+  collectedPokemon: CollectedPokemon[];
   isCatching: boolean;
-  error: string;
+  catchError: string;
 }
 
-export enum PokemonTypeEnum {
-  NORMAL = 'normal',
-  FIRE = 'fire',
-  WATER = 'water',
-  ELECTRIC = 'electric',
-  GRASS = 'grass',
-  ICE = 'ice',
-  FIGHTING = 'fighting',
-  POISON = 'poison',
-  GROUND = 'ground',
-  FLYING = 'flying',
-  PSYCHIC = 'psychic',
-  BUG = 'bug',
-  ROCK = 'rock',
-  GHOST = 'ghost',
-  DRAGON = 'dragon',
-  DARK = 'dark',
-  STEEL = 'steel',
-  FAIRY = 'fairy',
+export interface PokemonSearchState {
+  searchedPokemon?: PokemonData;
+  isSearching: boolean;
+  searchError: string;
 }
