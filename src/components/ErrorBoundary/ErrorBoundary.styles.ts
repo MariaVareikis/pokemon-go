@@ -14,7 +14,7 @@ export const ERROR_BOUNDARY_STYLES = {
   },
   errorTitle: {
     color: "$white",
-    fontSize: "$2xl", 
+    fontSize: "$2xl",
     fontWeight: "$bold",
     textAlign: "center",
     mb: "$3",
