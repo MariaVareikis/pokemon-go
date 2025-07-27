@@ -10,89 +10,85 @@ import {
   HStack,
   ScrollView,
 } from '@gluestack-ui/themed';
-import { usePokemonSearch } from '@/src/hooks/usePokemonSearch';
+
+import { useAppDispatch, useAppSelector } from '@/src/store/hooks';
+import {
+  searchPokemon,
+  clearSearchResults,
+} from '@/src/store/slices/pokemonSlice';
+import {
+  selectSearchedPokemon,
+  selectIsSearching,
+  selectSearchError,
+} from '@/src/store/selectors/pokemonSelectors';
+
 import { SEARCH_SCREEN_STYLES as styles } from '@/src/styles/SearchScreen.styles';
 import { POKEMON_CONTENT } from '@/src/constants/pokemon';
 import PokemonInfo from '@/src/components/PokemonInfo/PokemonInfo';
 
 const PokemonSearchScreen: React.FC = () => {
-  const {
-    searchedPokemon,
-    isSearching,
-    searchError,
-    searchForPokemon,
-    clearSearchResults,
-  } = usePokemonSearch();
+  const dispatch = useAppDispatch();
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const pokemon = useAppSelector(selectSearchedPokemon);
+  const loading = useAppSelector(selectIsSearching);
+  const error = useAppSelector(selectSearchError);
 
-  const handleSearchInputChange = (inputText: string) => {
-    setSearchTerm(inputText);
-    if (inputText.trim() === '') clearSearchResults();
+  const [query, setQuery] = useState('');
+
+  const onChangeQuery = (text: string) => {
+    setQuery(text);
+    if (text.trim() === '') {
+      dispatch(clearSearchResults());
+    }
   };
 
-  const handlePokemonSearch = () => searchForPokemon(searchTerm);
-
-  const renderSearchHeader = () => (
-    <Text {...styles.title}>{POKEMON_CONTENT.SEARCH_TITLE}</Text>
-  );
-
-  const renderSearchInput = () => (
-    <HStack {...styles.searchHStack}>
-      <Input {...styles.input}>
-        <InputField
-          {...styles.inputField}
-          value={searchTerm}
-          onChangeText={handleSearchInputChange}
-          returnKeyType="search"
-          onSubmitEditing={handlePokemonSearch}
-          placeholder={POKEMON_CONTENT.SEARCH_PLACEHOLDER}
-        />
-      </Input>
-
-      <Button
-        {...styles.searchButton}
-        isDisabled={isSearching}
-        onPress={handlePokemonSearch}
-      >
-        <ButtonText color="$white" fontWeight="$bold">
-          {POKEMON_CONTENT.SEARCH_BUTTON}
-        </ButtonText>
-      </Button>
-    </HStack>
-  );
-
-  const renderLoadingState = () => {
-    if (!isSearching) return null;
-
-    return (
-      <VStack {...styles.loadingContainer}>
-        <Spinner {...styles.spinnerProps} />
-        <Text {...styles.loadingText}>{POKEMON_CONTENT.LOADING_TEXT}</Text>
-      </VStack>
-    );
-  };
-
-  const renderErrorMessage = () => {
-    if (!searchError) return null;
-
-    return <Text {...styles.errorText}>{searchError}</Text>;
-  };
-
-  const renderPokemonResult = () => {
-    if (isSearching || !searchedPokemon) return null;
-
-    return <PokemonInfo pokemon={searchedPokemon} />;
+  const onSearch = () => {
+    const trimmed = query.trim();
+    if (trimmed) {
+      dispatch(searchPokemon(trimmed));
+    }
   };
 
   return (
     <ScrollView {...styles.container}>
       <VStack {...styles.mainVStack}>
-        {renderSearchHeader()}
-        {renderSearchInput()}
-        {renderLoadingState()}
-        {renderErrorMessage()}
-        {renderPokemonResult()}
+        <Text {...styles.title}>{POKEMON_CONTENT.SEARCH_TITLE}</Text>
+
+        <HStack {...styles.searchHStack}>
+          <Button
+            {...styles.searchButton}
+            isDisabled={loading || !query.trim()}
+            onPress={onSearch}
+          >
+            <ButtonText {...styles.searchButtonText}>
+              {POKEMON_CONTENT.SEARCH_BUTTON}
+            </ButtonText>
+          </Button>
+          
+          <Input {...styles.input}>
+            <InputField
+              {...styles.inputField}
+              value={query}
+              onChangeText={onChangeQuery}
+              returnKeyType="search"
+              onSubmitEditing={onSearch}
+              placeholder={POKEMON_CONTENT.SEARCH_PLACEHOLDER}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+          </Input>
+        </HStack>
+
+        {loading && (
+          <VStack {...styles.loadingContainer}>
+            <Spinner {...styles.spinnerProps} />
+            <Text {...styles.loadingText}>{POKEMON_CONTENT.LOADING_TEXT}</Text>
+          </VStack>
+        )}
+
+        {!loading && error && <Text {...styles.errorText}>{error}</Text>}
+
+        {!loading && !error && pokemon && <PokemonInfo pokemon={pokemon} />}
       </VStack>
     </ScrollView>
   );

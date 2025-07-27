@@ -18,6 +18,6 @@ export const COLORS = {
   BLACK_10: 'rgba(0, 0, 0, 0.1)',
   BLACK_30: 'rgba(0, 0, 0, 0.3)',
   BLACK_50: 'rgba(0, 0, 0, 0.5)',
-} as const;
+};
 
-export const GRADIENT_COLORS = ['#f9a8d4', '#d8b4fe', '#818cf8'] as const;
+export const GRADIENT_COLORS = ['#f9a8d4', '#d8b4fe', '#818cf8'];

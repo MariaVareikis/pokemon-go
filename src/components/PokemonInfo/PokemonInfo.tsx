@@ -1,49 +1,58 @@
-import React, { useState } from 'react';
-import { VStack, Text, Box, HStack, Spinner } from '@gluestack-ui/themed';
+import React from 'react';
+import {
+  VStack,
+  Text,
+  Box,
+  HStack,
+  Spinner,
+  Pressable,
+} from '@gluestack-ui/themed';
 import { Image } from 'expo-image';
-import { TouchableOpacity } from 'react-native';
-import { Pokemon } from '@/src/types/pokemonTypes';
-import { SEARCH_SCREEN_STYLES as styles } from '@/src/styles/SearchScreen.styles';
-import { SPINNER_CONFIG } from '@/src/constants/ui';
+import { PokemonData } from '@/src/types/pokemonTypes';
+import { POKEMON_INFO_STYLES as styles } from './PokemonInfo.styles';
+import { CATCH_BUTTON_STYLES as buttonStyles } from '../CatchButton/CatchButton.styles';
 import { useAppDispatch, useAppSelector } from '@/src/store/hooks';
-import { catchPokemon, pokemonSelectors } from '@/src/store/slices/pokemonSlice';
+import { catchPokemon, showPopup } from '@/src/store/slices/pokemonSlice';
 import { CATCH_MESSAGES } from '@/src/constants/catch';
-import CatchPopup from '@/src/components/CatchPopup/CatchPopup';
 import pokeballIcon from '@/src/assets/poke-ball.png';
-import { SPINNER_CONFIG } from './PokemonInfo.styles';
 
-interface PokemonInfoProps {
-  pokemon: Pokemon;
+interface PokemonInfo {
+  pokemon: PokemonData;
 }
 
-const PokemonInfo: React.FC<PokemonInfoProps> = ({ pokemon }) => {
+const PokemonInfo: React.FC<PokemonInfo> = ({ pokemon }) => {
   const dispatch = useAppDispatch();
-  const { caughtPokemon, isCatching } = useAppSelector(state => state.pokemon);
-  
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [pokemonCatchResult, setPokemonCatchResult] = useState({ success: false });
+  const { isCatching } = useAppSelector(state => state.pokemon);
 
-  const isPokemonAlreadyCaught = pokemonSelectors.isPokemonCaught(caughtPokemon, pokemon.id);
-  const pokemonImageUrl = pokemon.sprites.other['official-artwork'].front_default;
+  const pokemonImageUrl =
+    pokemon.sprites.other['official-artwork'].front_default;
   const pokemonDisplayName = pokemon.name;
   const pokemonNumber = pokemon.id;
 
   const handlePokemonCatch = async () => {
     const catchAttemptResult = await dispatch(catchPokemon(pokemon));
-    
+
     if (catchPokemon.fulfilled.match(catchAttemptResult)) {
-      setPokemonCatchResult(catchAttemptResult.payload);
+      dispatch(
+        showPopup({
+          success: catchAttemptResult.payload.success,
+          pokemonName: pokemonDisplayName,
+          pokemonImage: pokemonImageUrl,
+        }),
+      );
     } else {
-      setPokemonCatchResult({ success: false });
+      dispatch(
+        showPopup({
+          success: false,
+          pokemonName: pokemonDisplayName,
+          pokemonImage: pokemonImageUrl,
+        }),
+      );
     }
-    
-    setIsPopupVisible(true);
   };
 
-  const closeCatchPopup = () => setIsPopupVisible(false);
-
   const renderPokemonTypes = () => (
-    <HStack {...styles.typesHStack}>
+    <HStack {...styles.typesContainer}>
       {pokemon.types.map((pokemonType, typeIndex) => (
         <Box key={`${pokemonType.type.name}-${typeIndex}`} {...styles.typeChip}>
           <Text {...styles.typeText}>{pokemonType.type.name}</Text>
@@ -53,55 +62,44 @@ const PokemonInfo: React.FC<PokemonInfoProps> = ({ pokemon }) => {
   );
 
   const renderCatchButton = () => (
-    <TouchableOpacity
+    <Pressable
       onPress={handlePokemonCatch}
-      disabled={isCatching || isPokemonAlreadyCaught}
-      style={styles.catchButtonStyle}
-      activeOpacity={0.8}
+      disabled={isCatching}
+      {...buttonStyles.container}
     >
-      {isCatching ? (
-        <Spinner {...SPINNER_CONFIG.SMALL_WHITE} />
-      ) : (
-        <Image
-          source={pokeballIcon}
-          style={styles.catchButtonIcon}
-          contentFit="contain"
-        />
-      )}
-      <Text style={styles.catchButtonText}>
-        {isPokemonAlreadyCaught 
-          ? 'Already caught!'
-          : isCatching
+      <HStack {...buttonStyles.content}>
+        {isCatching ? (
+          <Spinner {...buttonStyles.spinner} />
+        ) : (
+          <Image
+            source={pokeballIcon}
+            style={buttonStyles.icon}
+            contentFit="contain"
+          />
+        )}
+        <Text {...buttonStyles.text}>
+          {isCatching
             ? CATCH_MESSAGES.BUTTON_CATCHING
-            : CATCH_MESSAGES.BUTTON_CATCH
-        }
-      </Text>
-    </TouchableOpacity>
+            : CATCH_MESSAGES.BUTTON_CATCH}
+        </Text>
+      </HStack>
+    </Pressable>
   );
 
   return (
-    <>
-      <VStack {...styles.pokemonContainer}>
-        <Image
-          source={{ uri: pokemonImageUrl }}
-          style={styles.pokemonImage}
-          contentFit="contain"
-        />
-
-        <Text {...styles.pokemonName}>{pokemonDisplayName}</Text>
-        <Text {...styles.pokemonId}>#{pokemonNumber}</Text>
-
-        {renderPokemonTypes()}
-        {renderCatchButton()}
-      </VStack>
-
-      <CatchPopup
-        isVisible={isPopupVisible}
-        success={pokemonCatchResult.success}
-        pokemonName={pokemonDisplayName}
-        onClose={closeCatchPopup}
+    <VStack {...styles.container}>
+      <Image
+        source={{ uri: pokemonImageUrl }}
+        style={styles.image}
+        contentFit="contain"
       />
-    </>
+
+      <Text {...styles.name}>{pokemonDisplayName}</Text>
+      <Text {...styles.id}>#{pokemonNumber}</Text>
+
+      {renderPokemonTypes()}
+      {renderCatchButton()}
+    </VStack>
   );
 };
 

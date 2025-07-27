@@ -1,87 +1,178 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import {
-  Pokemon,
-  CaughtPokemon,
-  CatchResult,
-  PokemonState,
-} from '@/src/types/pokemonTypes';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TIMING } from '@/src/constants/storage';
+import {
+  CatchAttemptResult,
+  PokemonData,
+  PokemonCollectionState,
+  PokemonSearchState,
+} from '@/src/types/pokemonTypes';
+import { createCollectedPokemon } from '@/src/utils/pokemonUtils';
+import { getPokemon } from '@/src/services/pokemonService';
+import handleApiError from '@/src/utils/errorUtils.ts ';
+import { CATCH_MESSAGES } from '@/src/constants/catch';
 
-const createCaughtPokemon = (pokemon: Pokemon): CaughtPokemon => ({
-  id: pokemon.id,
-  name: pokemon.name,
-  imageUrl: pokemon.sprites.other['official-artwork'].front_default,
-  types: pokemon.types.map(t => t.type.name),
-  caughtAt: new Date().toISOString(),
-  catchId: `${pokemon.id}-${Date.now()}`,
-});
+// Добавляем типы для popup
+export interface PopupData {
+  success: boolean;
+  pokemonName?: string;
+  pokemonImage?: string;
+}
+
+interface PokemonState extends PokemonCollectionState, PokemonSearchState {
+  isPopupVisible: boolean;
+  popupData: PopupData;
+}
 
 const initialState: PokemonState = {
-  caughtPokemon: [],
-  isLoading: false,
+  collectedPokemon: [],
   isCatching: false,
-  error: '',
+  catchError: '',
+  searchedPokemon: undefined,
+  isSearching: false,
+  searchError: '',
+  isPopupVisible: false,
+  popupData: {
+    success: false,
+  },
 };
 
+export const searchPokemon = createAsyncThunk<PokemonData, string>(
+  'pokemon/search',
+  async query => {
+    const data = await getPokemon(query);
+    return data;
+  },
+);
+
 export const catchPokemon = createAsyncThunk<
-  CatchResult,
-  Pokemon,
+  CatchAttemptResult,
+  PokemonData,
   { state: { pokemon: PokemonState } }
->('pokemon/catch', async (pokemon, { getState }) => {
-  const { caughtPokemon } = getState().pokemon;
-
-  if (caughtPokemon.some(p => p.id === pokemon.id)) {
-    return { success: false, error: `${pokemon.name}כבר נתפס!` };
-  }
-
+>('pokemon/catch', async (pokemonData, { getState }) => {
   await new Promise(resolve => setTimeout(resolve, TIMING.CATCH_DELAY_MS));
 
-  const newPokemon = createCaughtPokemon(pokemon);
-  return { success: true, pokemon: newPokemon };
+  const success = Math.random() < 0.5;
+
+  if (success) {
+    const newCollectedPokemon = createCollectedPokemon(pokemonData);
+    return { success: true, pokemon: newCollectedPokemon };
+  } else {
+    return {
+      success: false,
+      error: `${pokemonData.name} ${CATCH_MESSAGES.FAILURE}`,
+    };
+  }
 });
 
 const pokemonSlice = createSlice({
   name: 'pokemon',
   initialState,
   reducers: {
-    clearError: state => {
-      state.error = '';
+    clearCatchError: state => {
+      state.catchError = '';
+    },
+    clearSearchError: state => {
+      state.searchError = '';
+    },
+    clearAllErrors: state => {
+      state.catchError = '';
+      state.searchError = '';
+    },
+    clearSearchResults: state => {
+      state.searchedPokemon = undefined;
+      state.searchError = '';
     },
     releasePokemon: (state, action) => {
-      state.caughtPokemon = state.caughtPokemon.filter(
-        p => p.catchId !== action.payload,
+      state.collectedPokemon = state.collectedPokemon.filter(
+        p => p.collectionId !== action.payload,
       );
+    },
+    // Новые reducers для popup
+    showPopup: (state, action: PayloadAction<PopupData>) => {
+      state.isPopupVisible = true;
+      state.popupData = action.payload;
+    },
+    hidePopup: state => {
+      state.isPopupVisible = false;
+      state.popupData = { success: false };
     },
   },
   extraReducers: builder => {
     builder
+      .addCase(searchPokemon.pending, state => {
+        state.isSearching = true;
+        state.searchError = '';
+        state.catchError = '';
+      })
+      .addCase(searchPokemon.fulfilled, (state, action) => {
+        state.isSearching = false;
+        state.searchedPokemon = action.payload;
+        state.searchError = '';
+      })
+      .addCase(searchPokemon.rejected, (state, action) => {
+        state.isSearching = false;
+        state.searchedPokemon = undefined;
+        state.searchError = handleApiError(action.error);
+      })
       .addCase(catchPokemon.pending, state => {
         state.isCatching = true;
-        state.error = '';
+        state.catchError = '';
+        state.searchError = '';
       })
       .addCase(catchPokemon.fulfilled, (state, action) => {
         state.isCatching = false;
+        state.catchError = '';
         if (action.payload.success && action.payload.pokemon) {
-          state.caughtPokemon.push(action.payload.pokemon);
+          state.collectedPokemon.push(action.payload.pokemon);
+        } else if (action.payload.error) {
+          state.catchError = action.payload.error;
         }
       })
       .addCase(catchPokemon.rejected, (state, action) => {
         state.isCatching = false;
-        state.error = action.error.message || 'Ошибка';
+        state.catchError = action.error.message || 'שגיאה';
       });
+  },
+  selectors: {
+    selectCollectedPokemon: state => state.collectedPokemon,
+    selectSearchedPokemon: state => state.searchedPokemon,
+    selectIsCatching: state => state.isCatching,
+    selectIsSearching: state => state.isSearching,
+    selectCatchError: state => state.catchError,
+    selectSearchError: state => state.searchError,
+    isPokemonCollected: (state, pokemonId: number) =>
+      state.collectedPokemon.some(p => p.id === pokemonId),
+    getCollectedCount: (state, pokemonId: number) =>
+      state.collectedPokemon.filter(p => p.id === pokemonId).length,
+    getTotalCollected: state => state.collectedPokemon.length,
+    // Новые selectors для popup
+    selectPopupVisible: state => state.isPopupVisible,
+    selectPopupData: state => state.popupData,
   },
 });
 
-export const { clearError, releasePokemon } = pokemonSlice.actions;
+export const {
+  clearCatchError,
+  clearSearchError,
+  clearAllErrors,
+  clearSearchResults,
+  releasePokemon,
+  showPopup,
+  hidePopup,
+} = pokemonSlice.actions;
 
-export const pokemonSelectors = {
-  isPokemonCaught: (caughtList: CaughtPokemon[], pokemonId: number) =>
-    caughtList.some(p => p.id === pokemonId),
-
-  getCaughtCount: (caughtList: CaughtPokemon[], pokemonId: number) =>
-    caughtList.filter(p => p.id === pokemonId).length,
-
-  getTotalCount: (caughtList: CaughtPokemon[]) => caughtList.length,
-};
+export const {
+  selectCollectedPokemon,
+  selectSearchedPokemon,
+  selectIsCatching,
+  selectIsSearching,
+  selectCatchError,
+  selectSearchError,
+  isPokemonCollected,
+  getCollectedCount,
+  getTotalCollected,
+  selectPopupVisible,
+  selectPopupData,
+} = pokemonSlice.selectors;
 
 export default pokemonSlice.reducer;

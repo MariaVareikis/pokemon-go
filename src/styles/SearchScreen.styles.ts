@@ -19,8 +19,9 @@ export const SEARCH_SCREEN_STYLES = {
     mb: '$5',
   },
   searchHStack: {
-    space: 'md',
+    space: 'sm',
     alignItems: 'center',
+    width: '100%',
   },
   input: {
     flex: 1,
@@ -32,15 +33,26 @@ export const SEARCH_SCREEN_STYLES = {
     px: '$4',
     py: '$3',
     fontSize: '$md',
-    color: '$white',
-    placeholderTextColor: COLORS.WHITE_60,
+    color: COLORS.WHITE_60,
+    placeholderTextColor: 'rgba(255, 255, 255, 0.8)',
+    fontWeight: '$semibold',
+    textAlign: 'right',
+    writingDirection: 'rtl',
   },
   searchButton: {
-    bg: COLORS.WHITE_20,
-    px: '$5',
+    bg: COLORS.WHITE_90,
+    px: '$4',
     py: '$3',
     borderRadius: '$lg',
-    minWidth: '$20',
+    minWidth: '$24',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  searchButtonText: {
+    color: COLORS.BLACK_50,
+    fontSize: '$sm',
+    fontWeight: '$bold',
+    textAlign: 'center',
   },
   loadingContainer: {
     alignItems: 'center',
@@ -88,7 +100,6 @@ export const SEARCH_SCREEN_STYLES = {
     color: COLORS.WHITE_80,
     mb: '$4',
   },
-
   typesHStack: {
     space: 'sm',
     flexWrap: 'wrap',
@@ -105,34 +116,4 @@ export const SEARCH_SCREEN_STYLES = {
     fontSize: '$sm',
     fontWeight: '$medium',
   },
-
-  catchButtonStyle: {
-    marginTop: 16,
-    borderRadius: 8,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    minWidth: 100,
-    minHeight: 40,
-    backgroundColor: 'rgba(220, 53, 69, 0.95)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-  } as const,
-
-  catchButtonIcon: {
-    width: 18,
-    height: 18,
-  } as const,
-
-  catchButtonText: {
-    color: 'white',
-    fontWeight: 'bold' as const,
-    fontSize: 15,
-  } as const,
 } as const;

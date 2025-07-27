@@ -1,50 +1,57 @@
+import { COLORS } from '@/src/constants/colors';
+
 export const CATCH_BUTTON_STYLES = {
   container: {
-    position: 'absolute',
-    bottom: 100,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    zIndex: 1000,
-    paddingHorizontal: '$5',
+    mt: '$4',
+    borderRadius: '$md',
+    px: '$6',
+    py: '$3',
+    bg: '#818cf8',
+    shadowColor: '#4f63e6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    ':pressed': {
+      bg: '#5a6ad1',
+    },
   },
 
-  button: {
-    borderRadius: '$md',
-    paddingHorizontal: '$4',
-    paddingVertical: '$2',
-    minWidth: 80,
-    minHeight: 36,
-    bg: 'rgba(220, 53, 69, 0.95)',
-    shadowColor: '$black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 15,
-    flexDirection: 'row',
+  containerLoading: {
+    bg: 'rgba(16, 185, 129, 0.95)',
+    shadowColor: '#10B981',
+  },
+
+  containerDisabled: {
+    bg: 'rgba(156, 163, 175, 0.8)',
+    shadowColor: '#9CA3AF',
+    shadowOpacity: 0.2,
+  },
+
+  content: {
+    space: 'xs',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '$1.5',
-  } as const,
-
-  icon: {
-    width: 16,
-    height: 16,
-  } as const,
+  },
 
   text: {
-    color: '$white',
-    fontWeight: '$bold',
-    fontSize: '$sm',
-  } as const,
+    color: COLORS.WHITE_90,
+    fontWeight: '$extrabold',
+    fontSize: '$md',
+    textShadowColor: 'rgba(0,0,0,0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+  },
+
+  icon: {
+    width: 22,
+    height: 22,
+  },
 
   spinner: {
-    size: 'small' as const,
-    color: '$white',
-  } as const,
-
-  disabledButton: {
-    opacity: 0.5,
-    bg: 'rgba(128, 128, 128, 0.95)',
-  } as const,
+    width: 22,
+    height: 22,
+  },
 } as const;
