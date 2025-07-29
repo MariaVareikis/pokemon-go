@@ -27,7 +27,7 @@ const POPUP_CONFIG = {
   },
 } as const;
 
-const GlobalCatchPopup: React.FC = () => {
+const CatchPopup: React.FC = () => {
   const dispatch = useAppDispatch();
   const isVisible = useAppSelector(selectPopupVisible);
   const popupData = useAppSelector(selectPopupData);
@@ -84,4 +84,4 @@ const GlobalCatchPopup: React.FC = () => {
   );
 };
 
-export default GlobalCatchPopup;
+export default CatchPopup;

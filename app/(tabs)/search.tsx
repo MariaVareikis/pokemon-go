@@ -20,7 +20,7 @@ import {
   selectSearchedPokemon,
   selectIsSearching,
   selectSearchError,
-} from '@/src/store/selectors/pokemonSelectors';
+} from '@/src/store/slices/pokemonSlice';
 
 import { SEARCH_SCREEN_STYLES as styles } from '@/src/styles/SearchScreen.styles';
 import { POKEMON_CONTENT } from '@/src/constants/pokemon';

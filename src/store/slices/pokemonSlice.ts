@@ -1,17 +1,13 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TIMING } from '@/src/constants/storage';
-import {
-  CatchAttemptResult,
-  PokemonData,
-  PokemonCollectionState,
-  PokemonSearchState,
-} from '@/src/types/pokemonTypes';
-import { createCollectedPokemon } from '@/src/utils/pokemonUtils';
-import { getPokemon } from '@/src/services/pokemonService';
-import handleApiError from '@/src/utils/errorUtils.ts ';
 import { CATCH_MESSAGES } from '@/src/constants/catch';
+import { TIMING } from '@/src/constants/storage';
+import { getPokemon } from '@/src/services/pokemonService';
+import { PokemonData } from '@/src/types/api';
+import { CatchAttemptResult } from '@/src/types/operations';
+import { PokemonCollectionState, PokemonSearchState } from '@/src/types/store';
+import handleApiError from '@/src/utils/errorUtils';
+import { createCollectedPokemon } from '@/src/utils/pokemonUtils';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// Добавляем типы для popup
 export interface PopupData {
   success: boolean;
   pokemonName?: string;
@@ -44,25 +40,24 @@ export const searchPokemon = createAsyncThunk<PokemonData, string>(
   },
 );
 
-export const catchPokemon = createAsyncThunk<
-  CatchAttemptResult,
-  PokemonData,
-  { state: { pokemon: PokemonState } }
->('pokemon/catch', async (pokemonData, { getState }) => {
-  await new Promise(resolve => setTimeout(resolve, TIMING.CATCH_DELAY_MS));
+export const catchPokemon = createAsyncThunk<CatchAttemptResult, PokemonData>(
+  'pokemon/catch',
+  async pokemonData => {
+    await new Promise(resolve => setTimeout(resolve, TIMING.CATCH_DELAY_MS));
 
-  const success = Math.random() < 0.5;
+    const success = Math.random() < 0.5;
 
-  if (success) {
-    const newCollectedPokemon = createCollectedPokemon(pokemonData);
-    return { success: true, pokemon: newCollectedPokemon };
-  } else {
-    return {
-      success: false,
-      error: `${pokemonData.name} ${CATCH_MESSAGES.FAILURE}`,
-    };
-  }
-});
+    if (success) {
+      const newCollectedPokemon = createCollectedPokemon(pokemonData);
+      return { success: true, pokemon: newCollectedPokemon };
+    } else {
+      return {
+        success: false,
+        error: `${pokemonData.name} ${CATCH_MESSAGES.FAILURE}`,
+      };
+    }
+  },
+);
 
 const pokemonSlice = createSlice({
   name: 'pokemon',
@@ -87,7 +82,6 @@ const pokemonSlice = createSlice({
         p => p.collectionId !== action.payload,
       );
     },
-    // Новые reducers для popup
     showPopup: (state, action: PayloadAction<PopupData>) => {
       state.isPopupVisible = true;
       state.popupData = action.payload;
@@ -95,6 +89,26 @@ const pokemonSlice = createSlice({
     hidePopup: state => {
       state.isPopupVisible = false;
       state.popupData = { success: false };
+    },
+    updatePokemonNickname: (
+      state,
+      action: PayloadAction<{ collectionId: string; nickname: string }>,
+    ) => {
+      const pokemon = state.collectedPokemon.find(
+        p => p.collectionId === action.payload.collectionId,
+      );
+      if (pokemon) {
+        pokemon.nickname = action.payload.nickname;
+      }
+    },
+
+    togglePokemonFavorite: (state, action: PayloadAction<string>) => {
+      const pokemon = state.collectedPokemon.find(
+        p => p.collectionId === action.payload,
+      );
+      if (pokemon) {
+        pokemon.isFavorite = !pokemon.isFavorite;
+      }
     },
   },
   extraReducers: builder => {
@@ -145,7 +159,6 @@ const pokemonSlice = createSlice({
     getCollectedCount: (state, pokemonId: number) =>
       state.collectedPokemon.filter(p => p.id === pokemonId).length,
     getTotalCollected: state => state.collectedPokemon.length,
-    // Новые selectors для popup
     selectPopupVisible: state => state.isPopupVisible,
     selectPopupData: state => state.popupData,
   },
@@ -159,6 +172,8 @@ export const {
   releasePokemon,
   showPopup,
   hidePopup,
+  updatePokemonNickname,
+  togglePokemonFavorite,
 } = pokemonSlice.actions;
 
 export const {
