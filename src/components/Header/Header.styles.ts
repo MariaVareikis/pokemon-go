@@ -21,10 +21,4 @@ export const HEADER_STYLES = {
     fontWeight: '$medium',
     mb: '$4',
   },
-  separator: {
-    w: '$16',
-    h: '$0.5',
-    bg: 'rgba(255, 255, 255, 0.4)',
-    borderRadius: '$sm',
-  },
 } as const;

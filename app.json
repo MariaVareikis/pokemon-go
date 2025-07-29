@@ -8,6 +8,10 @@
     "scheme": "pokemongo",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "localization": {
+      "supportsRTL": true,
+      "forcesRTL": true
+    },
     "ios": {
       "supportsTablet": true
     },
@@ -33,7 +37,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true

@@ -18,9 +18,9 @@ export const POKEMON_INFO_STYLES = {
   },
 
   image: {
-    width: 200,
-    height: 200,
-    borderRadius: 16, // Изменил с '$lg' на число для Image
+    width: 150,
+    height: 150,
+    borderRadius: 16,
   },
 
   name: {
@@ -65,6 +65,44 @@ export const POKEMON_INFO_STYLES = {
     textTransform: 'capitalize',
   },
 
+  collectionInfoContainer: {
+    bg: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: '$md',
+    p: '$2',
+    mb: '$2',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    width: '100%',
+  },
+
+  collectionInfoRow: {
+    alignItems: 'center',
+    space: 'xs',
+  },
+
+  collectionIcon: {
+    fontSize: 16,
+  },
+
+  collectionMainText: {
+    fontSize: '$sm',
+    fontWeight: '$semibold',
+    color: '$white',
+    textAlign: 'center',
+    textShadowColor: 'rgba(0,0,0,0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+
+  collectionSubText: {
+    fontSize: '$xs',
+    color: 'rgba(255, 255, 255, 0.8)',
+    textAlign: 'center',
+    fontWeight: '$medium',
+    mt: '$1',
+  },
+
   catchButton: {
     mt: '$3',
     borderRadius: '$md',
@@ -87,12 +125,12 @@ export const POKEMON_INFO_STYLES = {
   pokeballIcon: {
     width: 24,
     height: 24,
-    tintColor: '#FFFFFF', // Изменил с '$white' на цвет для Image
+    tintColor: '#FFFFFF',
   },
 
   catchButtonText: {
     color: '$white',
-    fontWeight: '$extrabold', // Сделал жирнее
+    fontWeight: '$extrabold',
     fontSize: '$md',
     textShadowColor: COLORS.BLACK_30,
     textShadowOffset: { width: 1, height: 1 },
