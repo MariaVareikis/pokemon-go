@@ -39,16 +39,16 @@ export const EDIT_POKEMON_STYLES = {
   closeButton: {
     bg: COLORS.BLACK_10,
     borderRadius: '$full',
-    p: '$2',
-    width: 32,
-    height: 32,
+    p: '$3', // ← Увеличил с '$2' до '$3'
+    width: 40, // ← Увеличил с 32 до 40
+    height: 40, // ← Увеличил с 32 до 40
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   closeButtonText: {
     color: COLORS.BLACK_50,
-    fontSize: '$md',
+    fontSize: '$lg', // ← Увеличил с '$md' до '$lg'
     fontWeight: '$bold',
   },
 
@@ -93,12 +93,13 @@ export const EDIT_POKEMON_STYLES = {
     borderColor: COLORS.BLACK_30,
     width: '100%',
     alignSelf: 'flex-end',
+    minHeight: 48, // ← Добавил минимальную высоту
   },
 
   inputField: {
-    px: '$3',
-    py: '$3',
-    fontSize: '$md',
+    px: '$4', // ← Увеличил с '$3' до '$4'
+    py: '$4', // ← Увеличил с '$3' до '$4'
+    fontSize: '$lg', // ← Увеличил с '$md' до '$lg'
     color: COLORS.BLACK,
     textAlign: 'right',
     writingDirection: 'rtl',

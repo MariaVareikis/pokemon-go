@@ -1,126 +1,72 @@
 import { COLORS } from '@/src/constants/colors';
 
 export const CATCH_POPUP_STYLES = {
-  modalOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: '100%',
-    height: '100%',
-    zIndex: 999999,
+  modal: {
+    size: 'lg',
   },
 
-  blurLayer1: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: '100%',
-    height: '100%',
-    bg: COLORS.WHITE_10,
-  },
-
-  blurLayer2: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: '100%',
-    height: '100%',
-    bg: COLORS.BLACK_10,
-  },
-
-  blurLayer3: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: '100%',
-    height: '100%',
-    bg: COLORS.WHITE_10,
-  },
-
-  blurPressable: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    height: '100%',
-  },
-
-  contentContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    px: '$5',
-    py: '$5',
+  modalContent: {
     bg: COLORS.WHITE,
-    borderRadius: '$lg',
-    mx: '$10',
-    maxWidth: '80%',
-    minWidth: 280,
+    borderRadius: '$xl',
+    mx: '$4',
+    minWidth: 320,
+    maxWidth: '90%',
     shadowColor: COLORS.BLACK,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.25,
     shadowRadius: 16,
     elevation: 12,
-    position: 'relative',
-    overflow: 'hidden',
   },
 
-  closeButton: {
-    position: 'absolute',
-    top: '$3',
-    right: '$3',
-    bg: COLORS.BLACK_10,
-    borderRadius: '$lg',
-    p: '$2',
-    width: 32,
-    height: 32,
-    justifyContent: 'center',
+  modalBody: {
+    p: '$6',
+  },
+
+  mainContainer: {
+    space: 'lg',
     alignItems: 'center',
-  },
-
-  closeButtonText: {
-    color: COLORS.BLACK_50,
-    fontSize: '$sm',
-    fontWeight: '$bold',
-  },
-
-  headerContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    mb: '$4',
-    space: 'md',
-  },
-
-  celebrationIcon: {
-    fontSize: '$2xl',
+    width: '100%',
   },
 
   messageContainer: {
     alignItems: 'center',
-    flex: 1,
+    width: '100%',
+    space: 'sm',
+  },
+
+  headerContainer: {
+    space: '$3',
+    alignItems: 'center',
+    w: '100%',
+  },
+
+  celebrationIcon: {
+    fontSize: '$3xl',
+    mb: '$2',
   },
 
   messageText: {
     color: COLORS.BLACK_50,
-    fontSize: '$md',
+    fontSize: '$lg',
     fontWeight: '$semibold',
     textAlign: 'center',
-    mb: '$1',
+    lineHeight: '$lg',
   },
 
   pokemonNameText: {
     color: COLORS.BLACK,
-    fontSize: '$lg',
+    fontSize: '$xl',
     fontWeight: '$bold',
     textAlign: 'center',
     textTransform: 'capitalize',
+    lineHeight: '$xl',
+  },
+
+  modalCloseButton: {
+    position: 'absolute',
+    top: '$3',
+    left: '$3',
+    zIndex: 1,
   },
 
   pokemonImage: {

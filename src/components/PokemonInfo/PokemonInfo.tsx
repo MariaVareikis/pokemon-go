@@ -1,6 +1,6 @@
-import pokeballIcon from '@/src/assets/poke-ball.png';
-import { CATCH_MESSAGES } from '@/src/constants/catch';
-import { POKEMON_INFO_CONTENT } from '@/src/constants/pokemonInfo';
+import React, { useCallback } from 'react';
+import { Text, VStack } from '@gluestack-ui/themed';
+import { Image } from 'expo-image';
 import { useAppDispatch, useAppSelector } from '@/src/store/hooks';
 import {
   catchPokemon,
@@ -8,19 +8,11 @@ import {
   selectIsCatching,
   showPopup,
 } from '@/src/store/slices/pokemonSlice';
-import {
-  Box,
-  HStack,
-  Pressable,
-  Spinner,
-  Text,
-  VStack,
-} from '@gluestack-ui/themed';
-import { Image } from 'expo-image';
-import React from 'react';
-import { CATCH_BUTTON_STYLES as buttonStyles } from '../CatchButton/CatchButton.styles';
+import { PokemonData } from '@/src/types/interfaces/api.types';
+import CatchButton from '../CatchButton/CatchButton';
+import PokemonTypes from '../PokemonTypes/PokemonTypes';
+import CollectionInfo from '../CollectionInfo/CollectionInfo';
 import { POKEMON_INFO_STYLES as styles } from './PokemonInfo.styles';
-import { PokemonData } from '@/src/types/api';
 
 interface Props {
   pokemon: PokemonData;
@@ -39,7 +31,7 @@ const PokemonInfo: React.FC<Props> = ({ pokemon }) => {
   const pokemonDisplayName = pokemon.name;
   const pokemonNumber = pokemon.id;
 
-  const handlePokemonCatch = async () => {
+  const handlePokemonCatch = useCallback(async () => {
     const catchAttemptResult = await dispatch(catchPokemon(pokemon));
 
     if (catchPokemon.fulfilled.match(catchAttemptResult)) {
@@ -59,63 +51,7 @@ const PokemonInfo: React.FC<Props> = ({ pokemon }) => {
         }),
       );
     }
-  };
-
-  const renderPokemonTypes = () => (
-    <HStack {...styles.typesContainer}>
-      {pokemon.types.map((pokemonType, typeIndex) => (
-        <Box key={`${pokemonType.type.name}-${typeIndex}`} {...styles.typeChip}>
-          <Text {...styles.typeText}>{pokemonType.type.name}</Text>
-        </Box>
-      ))}
-    </HStack>
-  );
-
-  const renderCollectionInfo = () => (
-    <VStack {...styles.collectionInfoContainer}>
-      <HStack {...styles.collectionInfoRow}>
-        <Text {...styles.collectionIcon}>
-          {POKEMON_INFO_CONTENT.EMOJIS.BAG}
-        </Text>
-        <Text {...styles.collectionMainText}>
-          {POKEMON_INFO_CONTENT.COLLECTION_INFO.HAS_POKEMON} {collectedCount}
-        </Text>
-      </HStack>
-
-      {collectedCount > 0 && (
-        <Text {...styles.collectionSubText}>
-          {collectedCount === 1
-            ? POKEMON_INFO_CONTENT.COLLECTION_INFO.ONE_POKEMON
-            : `${collectedCount} ${POKEMON_INFO_CONTENT.COLLECTION_INFO.MULTIPLE_POKEMON}`}
-        </Text>
-      )}
-    </VStack>
-  );
-
-  const renderCatchButton = () => (
-    <Pressable
-      onPress={handlePokemonCatch}
-      disabled={isCatching}
-      {...buttonStyles.container}
-    >
-      <HStack {...buttonStyles.content}>
-        {isCatching ? (
-          <Spinner {...buttonStyles.spinner} />
-        ) : (
-          <Image
-            source={pokeballIcon}
-            style={buttonStyles.icon}
-            contentFit="contain"
-          />
-        )}
-        <Text {...buttonStyles.text}>
-          {isCatching
-            ? CATCH_MESSAGES.BUTTON_CATCHING
-            : CATCH_MESSAGES.BUTTON_CATCH}
-        </Text>
-      </HStack>
-    </Pressable>
-  );
+  }, [dispatch, pokemon, pokemonDisplayName, pokemonImageUrl]);
 
   return (
     <VStack {...styles.container}>
@@ -128,13 +64,13 @@ const PokemonInfo: React.FC<Props> = ({ pokemon }) => {
       <Text {...styles.name}>{pokemonDisplayName}</Text>
       <Text {...styles.id}>#{pokemonNumber}</Text>
 
-      {renderPokemonTypes()}
+      <PokemonTypes types={pokemon.types} styles={styles} />
 
-      {renderCollectionInfo()}
+      <CollectionInfo collectedCount={collectedCount} styles={styles} />
 
-      {renderCatchButton()}
+      <CatchButton onCatchResult={handlePokemonCatch} isDisabled={isCatching} />
     </VStack>
   );
 };
 
-export default PokemonInfo;
+export default React.memo(PokemonInfo);

@@ -1,31 +1,27 @@
 import React, { useEffect } from 'react';
-import { VStack, Text, Box, Pressable, HStack } from '@gluestack-ui/themed';
+import {
+  Modal,
+  ModalBackdrop,
+  ModalContent,
+  ModalCloseButton,
+  ModalBody,
+  VStack,
+  Text,
+  Box,
+  HStack,
+  Icon,
+  CloseIcon,
+} from '@gluestack-ui/themed';
 import { Image } from 'expo-image';
 import { useAppDispatch, useAppSelector } from '@/src/store/hooks';
 import {
   hidePopup,
-  selectPopupVisible,
   selectPopupData,
+  selectPopupVisible,
 } from '@/src/store/slices/pokemonSlice';
-import {
-  CATCH_MESSAGES,
-  CATCH_STYLES,
-  POPUP_AUTO_CLOSE_DELAY,
-} from '@/src/constants/catch';
+import { POPUP_AUTO_CLOSE_DELAY } from '@/src/constants/catch';
+import { POPUP_CONFIG } from '@/src/constants/catchPopup';
 import { CATCH_POPUP_STYLES as styles } from './CatchPopup.styles';
-
-const POPUP_CONFIG = {
-  success: {
-    emoji: CATCH_STYLES.SUCCESS_EMOJI,
-    message: CATCH_MESSAGES.SUCCESS,
-    color: CATCH_STYLES.SUCCESS_COLOR,
-  },
-  failure: {
-    emoji: CATCH_STYLES.FAILURE_EMOJI,
-    message: CATCH_MESSAGES.FAILURE,
-    color: CATCH_STYLES.FAILURE_COLOR,
-  },
-} as const;
 
 const CatchPopup: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -37,50 +33,48 @@ const CatchPopup: React.FC = () => {
   };
 
   useEffect(() => {
-    if (isVisible) {
-      const autoCloseTimer = setTimeout(handleClose, POPUP_AUTO_CLOSE_DELAY);
-      return () => clearTimeout(autoCloseTimer);
-    }
-  }, [isVisible]);
+    if (!isVisible) return;
 
-  if (!isVisible) return null;
+    const timer = setTimeout(handleClose, POPUP_AUTO_CLOSE_DELAY);
+    return () => clearTimeout(timer);
+  }, [isVisible]);
 
   const config = POPUP_CONFIG[popupData.success ? 'success' : 'failure'];
 
   return (
-    <Box {...styles.modalOverlay}>
-      <Box {...styles.blurLayer1} />
-      <Box {...styles.blurLayer2} />
-      <Box {...styles.blurLayer3} />
+    <Modal isOpen={isVisible} onClose={handleClose} {...styles.modal}>
+      <ModalBackdrop />
+      <ModalContent {...styles.modalContent}>
+        <ModalCloseButton {...styles.modalCloseButton}>
+          <Icon as={CloseIcon} />
+        </ModalCloseButton>
 
-      <Pressable {...styles.blurPressable} onPress={handleClose}>
-        <Pressable {...styles.contentContainer} onPress={() => {}}>
-          <Pressable {...styles.closeButton} onPress={handleClose}>
-            <Text {...styles.closeButtonText}>✕</Text>
-          </Pressable>
-
-          <HStack {...styles.headerContainer}>
+        <ModalBody {...styles.modalBody}>
+          <VStack {...styles.mainContainer}>
             <Text {...styles.celebrationIcon}>{config.emoji}</Text>
+
             <VStack {...styles.messageContainer}>
               <Text {...styles.messageText}>{config.message}</Text>
               {popupData.pokemonName && (
-                <Text {...styles.pokemonNameText}>{popupData.pokemonName}</Text>
+                <Text {...styles.pokemonNameText}>
+                  {popupData.pokemonName}
+                </Text>
               )}
             </VStack>
-          </HStack>
 
-          {popupData.pokemonImage && (
-            <Image
-              source={{ uri: popupData.pokemonImage }}
-              style={styles.pokemonImage}
-              contentFit="contain"
-            />
-          )}
+            {popupData.pokemonImage && (
+              <Image
+                source={{ uri: popupData.pokemonImage }}
+                style={styles.pokemonImage}
+                contentFit="contain"
+              />
+            )}
 
-          <Box {...styles.statusBar} bg={config.color} />
-        </Pressable>
-      </Pressable>
-    </Box>
+            <Box {...styles.statusBar} bg={config.color} />
+          </VStack>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   );
 };
 

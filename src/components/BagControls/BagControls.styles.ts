@@ -43,7 +43,6 @@ export const BAG_CONTROLS_STYLES = {
     mb: '$4',
   },
 
-  // Новые стили для контейнера фильтров
   filterContainer: {
     space: 'sm',
     mb: '$4',
@@ -73,12 +72,10 @@ export const BAG_CONTROLS_STYLES = {
     color: '$black',
   },
 
-  // Новые стили для эмодзи сердечка
   favoriteEmoji: {
     fontSize: 16,
   },
 
-  // Новый контейнер для сортировки
   sortMainContainer: {
     space: 'sm',
   },

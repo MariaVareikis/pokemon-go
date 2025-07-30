@@ -4,8 +4,12 @@ import {
   releasePokemon,
   togglePokemonFavorite,
 } from '@/src/store/slices/pokemonSlice';
-import { CollectedPokemon } from '@/src/types/pokemon';
-import { formatCatchDate, getDisplayName } from '@/src/utils/pokemonUtils';
+import { CollectedPokemons } from '@/src/types/interfaces/pokemon.types';
+import {
+  formatCatchDate,
+  formatCatchTime,
+  getDisplayName,
+} from '@/src/utils/pokemonUtils';
 import {
   AlertDialog,
   AlertDialogBackdrop,
@@ -24,11 +28,11 @@ import {
 } from '@gluestack-ui/themed';
 import { Image } from 'expo-image';
 import React, { useState } from 'react';
-import { POKEMON_CARD_STYLES as styles } from './PokemonCard.styles';
 import EditPokemon from '../EditPokemon/EditPokemon';
+import { POKEMON_CARD_STYLES as styles } from './PokemonCard.styles';
 
 interface Props {
-  pokemon: CollectedPokemon;
+  pokemon: CollectedPokemons;
 }
 
 const PokemonCard: React.FC<Props> = ({ pokemon }) => {
@@ -73,7 +77,7 @@ const PokemonCard: React.FC<Props> = ({ pokemon }) => {
             <HStack {...styles.nameContainer}>
               <Text {...styles.pokemonName}>{getDisplayName(pokemon)}</Text>
               <Pressable {...styles.editButton} onPress={handleEditPress}>
-                <Text {...styles.editIcon}>✏️</Text>
+                <Text {...styles.editIcon}>{content.ICONS.EDIT}</Text>
               </Pressable>
             </HStack>
 
@@ -114,12 +118,21 @@ const PokemonCard: React.FC<Props> = ({ pokemon }) => {
           ))}
         </HStack>
 
-        <HStack {...styles.dateContainer}>
-          <Text {...styles.dateText}>
-            {formatCatchDate(pokemon.collectedAt)}
-          </Text>
-          <Text {...styles.dateLabel}>{content.CATCH_DATE_LABEL}</Text>
-        </HStack>
+        <VStack {...styles.dateTimeContainer}>
+          <HStack {...styles.dateContainer}>
+            <Text {...styles.dateText}>
+              {formatCatchDate(pokemon.collectedAt)}
+            </Text>
+            <Text {...styles.dateLabel}>{content.CATCH_DATE_LABEL}</Text>
+          </HStack>
+
+          <HStack {...styles.timeContainer}>
+            <Text {...styles.timeText}>
+              {formatCatchTime(pokemon.collectedAt)}
+            </Text>
+            <Text {...styles.timeLabel}>{content.CATCH_TIME_LABEL}</Text>
+          </HStack>
+        </VStack>
 
         <HStack {...styles.bottomSection}>
           <Pressable {...styles.deleteButton} onPress={handleDeletePress}>

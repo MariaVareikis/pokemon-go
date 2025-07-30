@@ -16,7 +16,6 @@ const persistConfig = {
   key: 'pokemon-app',
   storage: AsyncStorage,
   whitelist: ['collectedPokemon'],
-  blacklist: ['isSearching', 'isCatching', 'searchError', 'catchError'],
 };
 
 const persistedReducer = persistReducer(persistConfig, pokemonReducer);

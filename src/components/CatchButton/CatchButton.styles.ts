@@ -3,9 +3,11 @@ import { COLORS } from '@/src/constants/colors';
 export const CATCH_BUTTON_STYLES = {
   container: {
     mt: '$4',
+    mb: '$4',
     borderRadius: '$md',
     px: '$6',
-    py: '$3',
+    py: '$4',
+    minHeight: 56,
     bg: '#818cf8',
     shadowColor: '#4f63e6',
     shadowOffset: { width: 0, height: 4 },
@@ -17,6 +19,10 @@ export const CATCH_BUTTON_STYLES = {
     ':pressed': {
       bg: '#5a6ad1',
     },
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    space: 'sm',
   },
 
   containerLoading: {
@@ -28,12 +34,6 @@ export const CATCH_BUTTON_STYLES = {
     bg: 'rgba(156, 163, 175, 0.8)',
     shadowColor: '#9CA3AF',
     shadowOpacity: 0.2,
-  },
-
-  content: {
-    space: 'xs',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 
   text: {
@@ -51,7 +51,7 @@ export const CATCH_BUTTON_STYLES = {
   },
 
   spinner: {
-    width: 22,
-    height: 22,
+    color: COLORS.WHITE_90,
+    size: 'small',
   },
 } as const;

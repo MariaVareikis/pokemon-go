@@ -65,7 +65,6 @@ export const BAG_SCREEN_STYLES = {
     fontWeight: '$medium',
   },
 
-  // Новые стили для элементов, которые были инлайновыми
   emptyBagEmojiRTL: {
     fontSize: 48,
     textAlign: 'center',

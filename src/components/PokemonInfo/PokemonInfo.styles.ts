@@ -102,48 +102,4 @@ export const POKEMON_INFO_STYLES = {
     fontWeight: '$medium',
     mt: '$1',
   },
-
-  catchButton: {
-    mt: '$3',
-    borderRadius: '$md',
-    px: '$6',
-    py: '$3',
-    minWidth: '$32',
-    bg: 'rgba(220, 53, 69, 0.9)',
-    shadowColor: COLORS.BLACK_50,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-
-  catchButtonContent: {
-    alignItems: 'center',
-    space: 'sm',
-  },
-
-  pokeballIcon: {
-    width: 24,
-    height: 24,
-    tintColor: '#FFFFFF',
-  },
-
-  catchButtonText: {
-    color: '$white',
-    fontWeight: '$extrabold',
-    fontSize: '$md',
-    textShadowColor: COLORS.BLACK_30,
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 1,
-  },
-
-  loadingSpinner: {
-    width: 20,
-    height: 20,
-  },
-
-  SPINNER_CONFIG: {
-    size: 'small' as const,
-    color: 'white' as const,
-  },
 } as const;

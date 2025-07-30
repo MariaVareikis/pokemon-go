@@ -235,4 +235,29 @@ export const POKEMON_CARD_STYLES = {
   confirmButtonText: {
     color: '$white',
   },
+
+  dateTimeContainer: {
+    alignItems: 'flex-end',
+    mb: '$3',
+    space: 'xs',
+  },
+
+  timeContainer: {
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    space: 'xs',
+  },
+
+  timeText: {
+    fontSize: '$sm',
+    fontWeight: '$medium',
+    color: COLORS.WHITE_80,
+    textAlign: 'right',
+  },
+
+  timeLabel: {
+    fontSize: '$xs',
+    color: COLORS.WHITE_60,
+    textAlign: 'right',
+  },
 } as const;

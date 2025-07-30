@@ -1,11 +1,4 @@
-import { EDIT_POKEMON_CONTENT } from '@/src/constants/editPokemon';
-import { useAppDispatch } from '@/src/store/hooks';
-import {
-  togglePokemonFavorite,
-  updatePokemonNickname,
-} from '@/src/store/slices/pokemonSlice';
-import { CollectedPokemon } from '@/src/types/pokemon';
-import { getDisplayName } from '@/src/utils/pokemonUtils';
+import React, { useState } from 'react';
 import {
   HStack,
   Input,
@@ -18,11 +11,18 @@ import {
   VStack,
 } from '@gluestack-ui/themed';
 import { Image } from 'expo-image';
-import React, { useState } from 'react';
+import { useAppDispatch } from '@/src/store/hooks';
+import {
+  togglePokemonFavorite,
+  updatePokemonNickname,
+} from '@/src/store/slices/pokemonSlice';
+import { CollectedPokemons } from '@/src/types/interfaces/pokemon.types';
+import { getDisplayName } from '@/src/utils/pokemonUtils';
+import { EDIT_POKEMON_CONFIG } from '@/src/constants/editPokemon';
 import { EDIT_POKEMON_STYLES as styles } from './EditPokemon.styles';
 
 interface Props {
-  pokemon: CollectedPokemon;
+  pokemon: CollectedPokemons;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -60,33 +60,19 @@ const EditPokemon: React.FC<Props> = ({ pokemon, isOpen, onClose }) => {
   };
 
   const characterCount = nickname.length;
-  const maxCharacters = EDIT_POKEMON_CONTENT.VALIDATION.MAX_CHARACTERS;
-  const isNearLimit =
-    characterCount >
-    maxCharacters * EDIT_POKEMON_CONTENT.VALIDATION.NEAR_LIMIT_THRESHOLD;
+  const { maxCharacters, nearLimitThreshold } = EDIT_POKEMON_CONFIG.validation;
+  const isNearLimit = characterCount > maxCharacters * nearLimitThreshold;
   const isOverLimit = characterCount > maxCharacters;
-
-  const favoriteButtonStyle = isFavorite
-    ? { ...styles.favoriteButton, ...styles.favoriteButtonActive }
-    : styles.favoriteButton;
-
-  const characterCountStyle = isOverLimit
-    ? { ...styles.characterCount, ...styles.characterCountLimit }
-    : styles.characterCount;
-
-  const saveButtonStyle = isOverLimit
-    ? { ...styles.saveButton, ...styles.saveButtonDisabled }
-    : styles.saveButton;
 
   return (
     <Modal isOpen={isOpen} onClose={handleCancel}>
       <ModalBackdrop {...styles.modalBackdrop} />
       <ModalContent {...styles.modalContent}>
         <HStack {...styles.header}>
-          <Text {...styles.title}>{EDIT_POKEMON_CONTENT.TITLE}</Text>
+          <Text {...styles.title}>{EDIT_POKEMON_CONFIG.text.title}</Text>
           <Pressable {...styles.closeButton} onPress={handleCancel}>
             <Text {...styles.closeButtonText}>
-              {EDIT_POKEMON_CONTENT.EMOJIS.CLOSE}
+              {EDIT_POKEMON_CONFIG.emojis.close}
             </Text>
           </Pressable>
         </HStack>
@@ -103,53 +89,63 @@ const EditPokemon: React.FC<Props> = ({ pokemon, isOpen, onClose }) => {
         </VStack>
 
         <VStack {...styles.inputContainer}>
-          <Text {...styles.label}>{EDIT_POKEMON_CONTENT.NICKNAME_LABEL}</Text>
+          <Text {...styles.label}>
+            {EDIT_POKEMON_CONFIG.text.nicknameLabel}
+          </Text>
           <Input {...styles.input}>
             <InputField
               {...styles.inputField}
               value={nickname}
               onChangeText={setNickname}
-              placeholder={EDIT_POKEMON_CONTENT.NICKNAME_PLACEHOLDER}
+              placeholder={EDIT_POKEMON_CONFIG.text.nicknamePlaceholder}
               maxLength={maxCharacters}
             />
           </Input>
           {(isNearLimit || isOverLimit) && (
-            <Text {...characterCountStyle}>
+            <Text
+              {...styles.characterCount}
+              {...(isOverLimit && styles.characterCountLimit)}
+            >
               {characterCount}/{maxCharacters}{' '}
-              {EDIT_POKEMON_CONTENT.CHARACTER_COUNT_SUFFIX}
+              {EDIT_POKEMON_CONFIG.text.characterCountSuffix}
             </Text>
           )}
         </VStack>
 
         <VStack {...styles.favoriteContainer}>
-          <Pressable {...favoriteButtonStyle} onPress={handleFavoriteToggle}>
+          <Pressable
+            {...styles.favoriteButton}
+            {...(isFavorite && styles.favoriteButtonActive)}
+            onPress={handleFavoriteToggle}
+          >
             <Text {...styles.favoriteIcon}>
               {isFavorite
-                ? EDIT_POKEMON_CONTENT.EMOJIS.FAVORITE_ACTIVE
-                : EDIT_POKEMON_CONTENT.EMOJIS.FAVORITE_INACTIVE}
+                ? EDIT_POKEMON_CONFIG.emojis.favoriteActive
+                : EDIT_POKEMON_CONFIG.emojis.favoriteInactive}
             </Text>
             <Text {...styles.favoriteButtonText}>
               {isFavorite
-                ? EDIT_POKEMON_CONTENT.FAVORITE_ACTIVE
-                : EDIT_POKEMON_CONTENT.FAVORITE_INACTIVE}
+                ? EDIT_POKEMON_CONFIG.text.favoriteActive
+                : EDIT_POKEMON_CONFIG.text.favoriteInactive}
             </Text>
           </Pressable>
         </VStack>
 
         <HStack {...styles.buttonsContainer}>
           <Pressable
-            {...saveButtonStyle}
+            {...styles.saveButton}
+            {...(isOverLimit && styles.saveButtonDisabled)}
             onPress={handleSave}
             disabled={isOverLimit}
           >
             <Text {...styles.saveButtonText}>
-              {EDIT_POKEMON_CONTENT.SAVE_BUTTON}
+              {EDIT_POKEMON_CONFIG.text.saveButton}
             </Text>
           </Pressable>
 
           <Pressable {...styles.cancelButton} onPress={handleCancel}>
             <Text {...styles.cancelButtonText}>
-              {EDIT_POKEMON_CONTENT.CANCEL_BUTTON}
+              {EDIT_POKEMON_CONFIG.text.cancelButton}
             </Text>
           </Pressable>
         </HStack>

@@ -1,3 +1,5 @@
+import { SortOption } from "../types/enums/sortOptions.types";
+
 export const BAG_CONTROLS_CONTENT = {
   SEARCH_TITLE: 'חיפוש לפי כינוי',
   SEARCH_PLACEHOLDER: 'הקלד כינוי...',
@@ -17,8 +19,8 @@ export const BAG_CONTROLS_CONTENT = {
 } as const;
 
 export const SORT_OPTIONS = {
-  DATE_DESC: { value: 'date-desc' as const, label: 'חדש → ישן' },
-  DATE_ASC: { value: 'date-asc' as const, label: 'ישן → חדש' },
-  NAME_ASC: { value: 'name-asc' as const, label: 'א → ת' },
-  NAME_DESC: { value: 'name-desc' as const, label: 'ת → א' },
+  DATE_DESC: { value: SortOption.DATE_DESC, label: 'חדש → ישן' },
+  DATE_ASC: { value: SortOption.DATE_ASC, label: 'ישן → חדש' },
+  NAME_ASC: { value: SortOption.NAME_ASC, label: 'א → ת' },
+  NAME_DESC: { value: SortOption.NAME_DESC, label: 'ת → א' },
 } as const;

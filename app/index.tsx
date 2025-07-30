@@ -6,5 +6,4 @@ const Index: React.FC = () => {
   return <Redirect href={DEFAULT_ROUTE} />;
 };
 
-
 export default Index;

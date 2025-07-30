@@ -1,18 +1,16 @@
 import { CATCH_MESSAGES } from '@/src/constants/catch';
 import { TIMING } from '@/src/constants/storage';
 import { getPokemon } from '@/src/services/pokemonService';
-import { PokemonData } from '@/src/types/api';
-import { CatchAttemptResult } from '@/src/types/operations';
-import { PokemonCollectionState, PokemonSearchState } from '@/src/types/store';
+import { PokemonData } from '@/src/types/interfaces/api.types';
+import { CatchAttemptResult } from '@/src/types/interfaces/operations.types';
+import { PopupData } from '@/src/types/interfaces/popup.types';
+import {
+  PokemonCollectionState,
+  PokemonSearchState,
+} from '@/src/types/interfaces/store.types';
 import handleApiError from '@/src/utils/errorUtils';
 import { createCollectedPokemon } from '@/src/utils/pokemonUtils';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-export interface PopupData {
-  success: boolean;
-  pokemonName?: string;
-  pokemonImage?: string;
-}
 
 interface PokemonState extends PokemonCollectionState, PokemonSearchState {
   isPopupVisible: boolean;
@@ -32,17 +30,25 @@ const initialState: PokemonState = {
   },
 };
 
-export const searchPokemon = createAsyncThunk<PokemonData, string>(
-  'pokemon/search',
-  async query => {
+export const searchPokemon = createAsyncThunk<
+  PokemonData,
+  string,
+  { rejectValue: string }
+>('pokemon/search', async (query, { rejectWithValue }) => {
+  try {
     const data = await getPokemon(query);
     return data;
-  },
-);
+  } catch (error) {
+    return rejectWithValue(handleApiError(error));
+  }
+});
 
-export const catchPokemon = createAsyncThunk<CatchAttemptResult, PokemonData>(
-  'pokemon/catch',
-  async pokemonData => {
+export const catchPokemon = createAsyncThunk<
+  CatchAttemptResult,
+  PokemonData,
+  { rejectValue: string }
+>('pokemon/catch', async (pokemonData, { rejectWithValue }) => {
+  try {
     await new Promise(resolve => setTimeout(resolve, TIMING.CATCH_DELAY_MS));
 
     const success = Math.random() < 0.5;
@@ -56,28 +62,20 @@ export const catchPokemon = createAsyncThunk<CatchAttemptResult, PokemonData>(
         error: `${pokemonData.name} ${CATCH_MESSAGES.FAILURE}`,
       };
     }
-  },
-);
+  } catch (error) {
+    return rejectWithValue(handleApiError(error));
+  }
+});
 
 const pokemonSlice = createSlice({
   name: 'pokemon',
   initialState,
   reducers: {
-    clearCatchError: state => {
-      state.catchError = '';
-    },
-    clearSearchError: state => {
-      state.searchError = '';
-    },
-    clearAllErrors: state => {
-      state.catchError = '';
-      state.searchError = '';
-    },
     clearSearchResults: state => {
       state.searchedPokemon = undefined;
       state.searchError = '';
     },
-    releasePokemon: (state, action) => {
+    releasePokemon: (state, action: PayloadAction<string>) => {
       state.collectedPokemon = state.collectedPokemon.filter(
         p => p.collectionId !== action.payload,
       );
@@ -101,7 +99,6 @@ const pokemonSlice = createSlice({
         pokemon.nickname = action.payload.nickname;
       }
     },
-
     togglePokemonFavorite: (state, action: PayloadAction<string>) => {
       const pokemon = state.collectedPokemon.find(
         p => p.collectionId === action.payload,
@@ -126,7 +123,7 @@ const pokemonSlice = createSlice({
       .addCase(searchPokemon.rejected, (state, action) => {
         state.isSearching = false;
         state.searchedPokemon = undefined;
-        state.searchError = handleApiError(action.error);
+        state.searchError = action.payload || 'שגיאה לא צפויה';
       })
       .addCase(catchPokemon.pending, state => {
         state.isCatching = true;
@@ -144,7 +141,7 @@ const pokemonSlice = createSlice({
       })
       .addCase(catchPokemon.rejected, (state, action) => {
         state.isCatching = false;
-        state.catchError = action.error.message || 'שגיאה';
+        state.catchError = action.payload || 'שגיאה';
       });
   },
   selectors: {
@@ -165,9 +162,6 @@ const pokemonSlice = createSlice({
 });
 
 export const {
-  clearCatchError,
-  clearSearchError,
-  clearAllErrors,
   clearSearchResults,
   releasePokemon,
   showPopup,

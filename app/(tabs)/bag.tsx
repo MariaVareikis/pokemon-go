@@ -8,7 +8,8 @@ import React, { useMemo, useState } from 'react';
 
 import BagControls from '@/src/components/BagControls/BagControls';
 import PokemonCard from '@/src/components/PokemonCard/PokemonCard';
-import { BagFilters } from '@/src/types/ui';
+import { BagFilters } from '@/src/types/interfaces/ui.types';
+import { SortOption } from '@/src/types/enums/sortOptions.types';
 
 const BagTab: React.FC = () => {
   const collectedPokemon = useAppSelector(selectCollectedPokemon);
@@ -16,7 +17,7 @@ const BagTab: React.FC = () => {
   const [filters, setFilters] = useState<BagFilters>({
     searchQuery: '',
     showFavoritesOnly: false,
-    sortBy: 'date-desc',
+    sortBy: SortOption.DATE_DESC,
   });
 
   const processedPokemon = useMemo(() => {

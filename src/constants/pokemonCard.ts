@@ -1,5 +1,6 @@
 export const POKEMON_CARD_CONTENT = {
   CATCH_DATE_LABEL: 'תאריך תפיסה: ',
+  CATCH_TIME_LABEL: 'שעה:',
   ACTIONS_LABEL: 'פעולות:',
   RELEASE_BUTTON: 'שחרר',
   DELETE_DIALOG: {

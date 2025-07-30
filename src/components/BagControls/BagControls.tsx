@@ -2,6 +2,8 @@ import {
   BAG_CONTROLS_CONTENT,
   SORT_OPTIONS,
 } from '@/src/constants/bagControls';
+import { BagFilters } from '@/src/types/interfaces/ui.types';
+import { SortOption } from '@/src/types/enums/sortOptions.types';
 import {
   HStack,
   Input,
@@ -12,7 +14,6 @@ import {
 } from '@gluestack-ui/themed';
 import React from 'react';
 import { BAG_CONTROLS_STYLES as styles } from './BagControls.styles';
-import { BagFilters, SortOption } from '@/src/types/ui';
 
 interface Props {
   filters: BagFilters;
@@ -48,14 +49,6 @@ const BagControls: React.FC<Props> = ({
     onFiltersChange({ ...filters, searchQuery: '' });
   };
 
-  const favoriteButtonStyle = filters.showFavoritesOnly
-    ? { ...styles.favoriteFilter, ...styles.favoriteFilterActive }
-    : styles.favoriteFilter;
-
-  const favoriteTextStyle = filters.showFavoritesOnly
-    ? { ...styles.favoriteFilterText, ...styles.favoriteFilterTextActive }
-    : styles.favoriteFilterText;
-
   return (
     <VStack {...styles.container}>
       <VStack {...styles.searchContainer}>
@@ -85,8 +78,15 @@ const BagControls: React.FC<Props> = ({
         <Text {...styles.sectionTitle}>
           {BAG_CONTROLS_CONTENT.FILTER_TITLE}
         </Text>
-        <Pressable {...favoriteButtonStyle} onPress={handleFavoritesToggle}>
-          <Text {...favoriteTextStyle}>
+        <Pressable
+          {...styles.favoriteFilter}
+          {...(filters.showFavoritesOnly && styles.favoriteFilterActive)}
+          onPress={handleFavoritesToggle}
+        >
+          <Text
+            {...styles.favoriteFilterText}
+            {...(filters.showFavoritesOnly && styles.favoriteFilterTextActive)}
+          >
             {BAG_CONTROLS_CONTENT.FAVORITES_ONLY}
           </Text>
           <Text {...styles.favoriteEmoji}>
@@ -102,20 +102,20 @@ const BagControls: React.FC<Props> = ({
         <HStack {...styles.sortContainer}>
           {Object.values(SORT_OPTIONS).map(option => {
             const isActive = filters.sortBy === option.value;
-            const buttonStyle = isActive
-              ? { ...styles.sortButton, ...styles.sortButtonActive }
-              : styles.sortButton;
-            const textStyle = isActive
-              ? { ...styles.sortButtonText, ...styles.sortButtonTextActive }
-              : styles.sortButtonText;
 
             return (
               <Pressable
                 key={option.value}
-                {...buttonStyle}
-                onPress={() => handleSortChange(option.value)}
+                {...styles.sortButton}
+                {...(isActive && styles.sortButtonActive)}
+                onPress={() => handleSortChange(option.value as SortOption)}
               >
-                <Text {...textStyle}>{option.label}</Text>
+                <Text
+                  {...styles.sortButtonText}
+                  {...(isActive && styles.sortButtonTextActive)}
+                >
+                  {option.label}
+                </Text>
               </Pressable>
             );
           })}

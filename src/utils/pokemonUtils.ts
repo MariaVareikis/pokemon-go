@@ -1,10 +1,10 @@
-import { CollectedPokemon } from '@/src/types/pokemon';
-import { PokemonData } from '@/src/types/api';
-import { SortOption } from '@/src/types/ui';
+import { PokemonData } from '@/src/types/interfaces/api.types';
+import { CollectedPokemons } from '@/src/types/interfaces/pokemon.types';
+import { SortOption } from '@/src/types/enums/sortOptions.types';
 
 export const createCollectedPokemon = (
   pokemonData: PokemonData,
-): CollectedPokemon => ({
+): CollectedPokemons => ({
   id: pokemonData.id,
   name: pokemonData.name,
   imageUrl: pokemonData.sprites.other['official-artwork'].front_default,
@@ -15,7 +15,7 @@ export const createCollectedPokemon = (
   isFavorite: false,
 });
 
-export const getDisplayName = (pokemon: CollectedPokemon): string => {
+export const getDisplayName = (pokemon: CollectedPokemons): string => {
   return pokemon.nickname || pokemon.name;
 };
 
@@ -25,44 +25,73 @@ export const formatCatchDate = (dateString: string): string => {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
+  });
+};
+
+export const formatCatchTime = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString('he-IL', {
     hour: '2-digit',
     minute: '2-digit',
   });
 };
 
 const sortFunctions = {
-  'date-asc': (a: CollectedPokemon, b: CollectedPokemon) =>
+  [SortOption.DATE_ASC]: (a: CollectedPokemons, b: CollectedPokemons) =>
     new Date(a.collectedAt).getTime() - new Date(b.collectedAt).getTime(),
 
-  'date-desc': (a: CollectedPokemon, b: CollectedPokemon) =>
+  [SortOption.DATE_DESC]: (a: CollectedPokemons, b: CollectedPokemons) =>
     new Date(b.collectedAt).getTime() - new Date(a.collectedAt).getTime(),
 
-  'name-asc': (a: CollectedPokemon, b: CollectedPokemon) =>
+  [SortOption.NAME_ASC]: (a: CollectedPokemons, b: CollectedPokemons) =>
     getDisplayName(a).localeCompare(getDisplayName(b), 'he'),
 
-  'name-desc': (a: CollectedPokemon, b: CollectedPokemon) =>
+  [SortOption.NAME_DESC]: (a: CollectedPokemons, b: CollectedPokemons) =>
     getDisplayName(b).localeCompare(getDisplayName(a), 'he'),
 } as const;
 
+const filterFunctions = {
+  search: (pokemon: CollectedPokemons, query: string) => {
+    if (!query) return true;
+    return getDisplayName(pokemon).toLowerCase().includes(query.toLowerCase());
+  },
+
+  favorites: (pokemon: CollectedPokemons, showFavoritesOnly: boolean) => {
+    if (!showFavoritesOnly) return true;
+    return pokemon.isFavorite;
+  },
+
+  type: (pokemon: CollectedPokemons, typeFilter?: string) => {
+    if (!typeFilter) return true;
+    return pokemon.types.includes(typeFilter);
+  },
+
+  dateRange: (
+    pokemon: CollectedPokemons,
+    dateRange?: { from: Date; to: Date },
+  ) => {
+    if (!dateRange) return true;
+    const pokemonDate = new Date(pokemon.collectedAt);
+    return pokemonDate >= dateRange.from && pokemonDate <= dateRange.to;
+  },
+} as const;
+
 export const sortPokemon = (
-  pokemon: CollectedPokemon[],
+  pokemon: CollectedPokemons[],
   sortBy: SortOption,
-): CollectedPokemon[] => {
+): CollectedPokemons[] => {
   return [...pokemon].sort(sortFunctions[sortBy]);
 };
 
 export const filterPokemon = (
-  pokemon: CollectedPokemon[],
-  searchQuery: string,
-  showFavoritesOnly: boolean,
-): CollectedPokemon[] => {
+  pokemon: CollectedPokemons[],
+  searchQuery: string = '',
+  showFavoritesOnly: boolean = false,
+): CollectedPokemons[] => {
   return pokemon.filter(p => {
-    const matchesSearch =
-      searchQuery === '' ||
-      getDisplayName(p).toLowerCase().includes(searchQuery.toLowerCase());
-
-    const matchesFavorites = !showFavoritesOnly || p.isFavorite;
-
-    return matchesSearch && matchesFavorites;
+    return (
+      filterFunctions.search(p, searchQuery) &&
+      filterFunctions.favorites(p, showFavoritesOnly)
+    );
   });
 };
