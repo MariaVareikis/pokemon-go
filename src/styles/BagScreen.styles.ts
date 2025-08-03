@@ -1,17 +1,10 @@
 export const BAG_SCREEN_STYLES = {
-  scrollContainerRTL: {
+  mainContainerRTL: {
     flex: 1,
     bg: 'transparent',
     px: '$3',
     writingDirection: 'rtl',
     textAlign: 'right',
-  },
-
-  mainContainerRTL: {
-    space: 'md',
-    mt: '$6',
-    pb: '$24',
-    alignItems: 'flex-end',
   },
 
   containerRTL: {
@@ -41,30 +34,6 @@ export const BAG_SCREEN_STYLES = {
     alignSelf: 'flex-end',
   },
 
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    px: '$5',
-    bg: 'transparent',
-    pb: '$20',
-  },
-
-  title: {
-    fontSize: '$2xl',
-    fontWeight: '$bold',
-    color: '$white',
-    textAlign: 'center',
-    mb: '$3',
-  },
-
-  subtitle: {
-    fontSize: '$md',
-    color: 'rgba(255, 255, 255, 0.8)',
-    textAlign: 'center',
-    fontWeight: '$medium',
-  },
-
   emptyBagEmojiRTL: {
     fontSize: 48,
     textAlign: 'center',
@@ -91,7 +60,13 @@ export const BAG_SCREEN_STYLES = {
     px: '$4',
   },
 
-  pokemonListContainerRTL: {
-    space: 'sm',
+  flatListContent: {
+    flexGrow: 1,
+    paddingBottom: 100,
+    paddingTop: 24,
+  },
+
+  pokemonSeparator: {
+    height: 12,
   },
 } as const;

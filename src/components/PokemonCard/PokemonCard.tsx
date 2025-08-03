@@ -26,6 +26,7 @@ import {
   Text,
   VStack,
 } from '@gluestack-ui/themed';
+import { FlatList } from 'react-native';
 import { Image } from 'expo-image';
 import React, { useState } from 'react';
 import EditPokemon from '../EditPokemon/EditPokemon';
@@ -64,6 +65,14 @@ const PokemonCard: React.FC<Props> = ({ pokemon }) => {
   const handleDeleteCancel = () => {
     setShowDeleteDialog(false);
   };
+
+  const renderTypeChip = ({ item, index }: { item: string; index: number }) => (
+    <Box key={`${item}-${index}`} {...styles.typeChip}>
+      <Text {...styles.typeText}>{item}</Text>
+    </Box>
+  );
+
+  const TypeSeparator = () => <Box {...styles.typeSeparator} />;
 
   const containerStyle = pokemon.isFavorite
     ? { ...styles.container, ...styles.containerFavorite }
@@ -110,13 +119,17 @@ const PokemonCard: React.FC<Props> = ({ pokemon }) => {
           />
         </VStack>
 
-        <HStack {...styles.typesContainer}>
-          {pokemon.types.map((type, index) => (
-            <Box key={`${type}-${index}`} {...styles.typeChip}>
-              <Text {...styles.typeText}>{type}</Text>
-            </Box>
-          ))}
-        </HStack>
+        <VStack {...styles.typesContainer}>
+          <FlatList
+            data={pokemon.types}
+            renderItem={renderTypeChip}
+            keyExtractor={(item, index) => `${item}-${index}`}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={TypeSeparator}
+            contentContainerStyle={styles.typesList}
+          />
+        </VStack>
 
         <VStack {...styles.dateTimeContainer}>
           <HStack {...styles.dateContainer}>

@@ -117,11 +117,20 @@ export const POKEMON_CARD_STYLES = {
   },
 
   typesContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    mb: '$4',
+    alignItems: 'center',
     justifyContent: 'center',
+    mb: '$4',
+    width: '100%',
+  },
+
+  typesList: {
+    flexGrow: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  typeSeparator: {
+    width: 8,
   },
 
   typeChip: {
@@ -139,30 +148,52 @@ export const POKEMON_CARD_STYLES = {
     textAlign: 'center',
   },
 
+  dateTimeContainer: {
+    alignItems: 'center',
+    mb: '$3',
+    space: 'xs',
+    width: '100%',
+  },
+
   dateContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    mt: '$2',
-    pt: '$2',
-    borderTopWidth: 1,
-    borderTopColor: COLORS.WHITE_20,
-    mb: '$3',
+    space: 'xs',
+  },
+
+  timeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    space: 'xs',
   },
 
   dateLabel: {
-    fontSize: '$sm',
+    fontSize: '$md',
     color: COLORS.WHITE_60,
     fontWeight: '$medium',
-    textAlign: 'center',
-    mr: '$2',
+    textAlign: 'right',
   },
 
   dateText: {
-    fontSize: '$sm',
+    fontSize: '$md',
     color: COLORS.WHITE_80,
     fontWeight: '$semibold',
     textAlign: 'center',
+  },
+
+  timeText: {
+    fontSize: '$md',
+    fontWeight: '$medium',
+    color: COLORS.WHITE_80,
+    textAlign: 'center',
+  },
+
+  timeLabel: {
+    fontSize: '$md',
+    color: COLORS.WHITE_60,
+    textAlign: 'right',
   },
 
   bottomSection: {
@@ -234,30 +265,5 @@ export const POKEMON_CARD_STYLES = {
 
   confirmButtonText: {
     color: '$white',
-  },
-
-  dateTimeContainer: {
-    alignItems: 'flex-end',
-    mb: '$3',
-    space: 'xs',
-  },
-
-  timeContainer: {
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    space: 'xs',
-  },
-
-  timeText: {
-    fontSize: '$sm',
-    fontWeight: '$medium',
-    color: COLORS.WHITE_80,
-    textAlign: 'right',
-  },
-
-  timeLabel: {
-    fontSize: '$xs',
-    color: COLORS.WHITE_60,
-    textAlign: 'right',
   },
 } as const;

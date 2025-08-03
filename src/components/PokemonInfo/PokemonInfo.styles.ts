@@ -45,10 +45,10 @@ export const POKEMON_INFO_STYLES = {
   },
 
   typesContainer: {
-    space: 'xs',
-    flexWrap: 'wrap',
+    alignItems: 'center',
     justifyContent: 'center',
-    mb: '$2',
+    mb: '$4',
+    width: '100%',
   },
 
   typeChip: {
@@ -101,5 +101,15 @@ export const POKEMON_INFO_STYLES = {
     textAlign: 'center',
     fontWeight: '$medium',
     mt: '$1',
+  },
+  typesList: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+
+  typeSeparator: {
+    width: 8,
   },
 } as const;

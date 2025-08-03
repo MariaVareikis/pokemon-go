@@ -5,10 +5,11 @@ export const SEARCH_SCREEN_STYLES = {
     flex: 1,
     px: '$6',
     bg: COLORS.TRANSPARENT,
+    pt: '$1',
   },
   mainVStack: {
-    space: 'lg',
-    mt: '$6',
+    space: 'sm',
+    mt: '$1',
     pb: '$20',
   },
   title: {
@@ -16,12 +17,13 @@ export const SEARCH_SCREEN_STYLES = {
     fontWeight: '$bold',
     color: '$white',
     textAlign: 'center',
-    mb: '$5',
+    mb: '$2',
   },
   searchHStack: {
     space: 'sm',
     alignItems: 'center',
     width: '100%',
+    mb: '$2',
   },
   input: {
     flex: 1,
@@ -56,12 +58,12 @@ export const SEARCH_SCREEN_STYLES = {
   },
   loadingContainer: {
     alignItems: 'center',
-    py: '$5',
+    py: '$2',
   },
   loadingText: {
     color: '$white',
     fontSize: '$md',
-    mt: '$3',
+    mt: '$1',
   },
   errorText: {
     color: COLORS.ERROR,
@@ -79,9 +81,9 @@ export const SEARCH_SCREEN_STYLES = {
   pokemonContainer: {
     bg: COLORS.WHITE_10,
     borderRadius: '$xl',
-    p: '$5',
+    p: '$3',
     alignItems: 'center',
-    mt: '$5',
+    mt: '$1',
   },
   pokemonImage: {
     width: 200,
@@ -92,13 +94,13 @@ export const SEARCH_SCREEN_STYLES = {
     fontWeight: '$bold',
     color: '$white',
     textTransform: 'capitalize',
-    mb: '$2',
-    mt: '$4',
+    mb: '$1',
+    mt: '$2',
   },
   pokemonId: {
     fontSize: '$lg',
     color: COLORS.WHITE_80,
-    mb: '$4',
+    mb: '$2',
   },
   typesHStack: {
     space: 'sm',

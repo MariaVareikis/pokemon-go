@@ -2,22 +2,23 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
     borderTopWidth: 0,
     paddingBottom: 12,
-    paddingTop: 12,
-    height: 65,
+    paddingTop: 8,
+    height: 70,
     position: 'absolute',
-    borderRadius: 20,
+    borderRadius: 0,
     marginHorizontal: 20,
-    marginBottom: 25,
+    marginBottom: 20,
     borderColor: 'rgba(255, 255, 255, 0.3)',
     shadowColor: 'transparent',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    elevation: 0,
   },
+
   tabIcon: {
     textAlign: 'center',
     fontSize: 24,

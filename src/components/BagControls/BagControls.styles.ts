@@ -81,9 +81,18 @@ export const BAG_CONTROLS_STYLES = {
   },
 
   sortContainer: {
-    flexDirection: 'row-reverse',
-    flexWrap: 'wrap',
-    gap: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  sortList: {
+    flexGrow: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  sortSeparator: {
+    width: 8,
   },
 
   sortButton: {

@@ -3,13 +3,15 @@ import { useAppSelector } from '@/src/store/hooks';
 import { selectCollectedPokemon } from '@/src/store/slices/pokemonSlice';
 import { BAG_SCREEN_STYLES as styles } from '@/src/styles/BagScreen.styles';
 import { filterPokemon, sortPokemon } from '@/src/utils/pokemonUtils';
-import { ScrollView, Text, VStack } from '@gluestack-ui/themed';
+import { Text, VStack } from '@gluestack-ui/themed';
+import { FlatList } from 'react-native';
 import React, { useMemo, useState } from 'react';
 
 import BagControls from '@/src/components/BagControls/BagControls';
 import PokemonCard from '@/src/components/PokemonCard/PokemonCard';
 import { BagFilters } from '@/src/types/interfaces/ui.types';
 import { SortOption } from '@/src/types/enums/sortOptions.types';
+import { CollectedPokemons } from '@/src/types/interfaces/pokemon.types';
 
 const BagTab: React.FC = () => {
   const collectedPokemon = useAppSelector(selectCollectedPokemon);
@@ -35,6 +37,36 @@ const BagTab: React.FC = () => {
     favorites: collectedPokemon.filter(p => p.isFavorite).length,
   };
 
+  const renderPokemonCard = ({ item }: { item: CollectedPokemons }) => (
+    <PokemonCard pokemon={item} />
+  );
+
+  const ItemSeparator = () => <VStack {...styles.pokemonSeparator} />;
+
+  const ListHeader = () => (
+    <VStack>
+      <Text {...styles.titleRTL}>{BAG_CONTENT.TITLE}</Text>
+      <BagControls
+        filters={filters}
+        onFiltersChange={setFilters}
+        totalCount={stats.total}
+        filteredCount={stats.filtered}
+        favoritesCount={stats.favorites}
+      />
+    </VStack>
+  );
+
+  const EmptyListComponent = () => (
+    <VStack {...styles.noResultsContainerRTL}>
+      <Text {...styles.noResultsEmojiRTL}>🔍</Text>
+      <Text {...styles.noResultsTextRTL}>
+        {filters.searchQuery || filters.showFavoritesOnly
+          ? BAG_CONTENT.NO_RESULTS
+          : BAG_CONTENT.NO_POKEMON_IN_BAG}
+      </Text>
+    </VStack>
+  );
+
   if (collectedPokemon.length === 0) {
     return (
       <VStack {...styles.containerRTL}>
@@ -46,39 +78,18 @@ const BagTab: React.FC = () => {
   }
 
   return (
-    <ScrollView
-      {...styles.scrollContainerRTL}
-      showsVerticalScrollIndicator={false}
-    >
-      <VStack {...styles.mainContainerRTL}>
-        <Text {...styles.titleRTL}>{BAG_CONTENT.TITLE}</Text>
-
-        <BagControls
-          filters={filters}
-          onFiltersChange={setFilters}
-          totalCount={stats.total}
-          filteredCount={stats.filtered}
-          favoritesCount={stats.favorites}
-        />
-
-        {processedPokemon.length === 0 ? (
-          <VStack {...styles.noResultsContainerRTL}>
-            <Text {...styles.noResultsEmojiRTL}>🔍</Text>
-            <Text {...styles.noResultsTextRTL}>
-              {filters.searchQuery || filters.showFavoritesOnly
-                ? BAG_CONTENT.NO_RESULTS
-                : BAG_CONTENT.NO_POKEMON_IN_BAG}
-            </Text>
-          </VStack>
-        ) : (
-          <VStack {...styles.pokemonListContainerRTL}>
-            {processedPokemon.map(pokemon => (
-              <PokemonCard key={pokemon.collectionId} pokemon={pokemon} />
-            ))}
-          </VStack>
-        )}
-      </VStack>
-    </ScrollView>
+    <VStack {...styles.mainContainerRTL}>
+      <FlatList
+        data={processedPokemon}
+        renderItem={renderPokemonCard}
+        keyExtractor={item => item.collectionId}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={ListHeader}
+        ListEmptyComponent={EmptyListComponent}
+        ItemSeparatorComponent={ItemSeparator}
+        contentContainerStyle={styles.flatListContent}
+      />
+    </VStack>
   );
 };
 

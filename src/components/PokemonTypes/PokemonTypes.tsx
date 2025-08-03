@@ -1,5 +1,7 @@
 import React from 'react';
-import { Box, HStack, Text } from '@gluestack-ui/themed';
+import { FlatList } from 'react-native';
+import { Box, Text, HStack } from '@gluestack-ui/themed';
+import { POKEMON_INFO_STYLES } from '../PokemonInfo/PokemonInfo.styles';
 
 interface PokemonType {
   type: {
@@ -9,17 +11,31 @@ interface PokemonType {
 
 interface Props {
   types: PokemonType[];
-  styles: any;
+  styles: typeof POKEMON_INFO_STYLES;
 }
 
-const PokemonTypes: React.FC<Props> = ({ types, styles }) => (
-  <HStack {...styles.typesContainer}>
-    {types.map((pokemonType, typeIndex) => (
-      <Box key={`${pokemonType.type.name}-${typeIndex}`} {...styles.typeChip}>
-        <Text {...styles.typeText}>{pokemonType.type.name}</Text>
-      </Box>
-    ))}
-  </HStack>
-);
+const PokemonTypes: React.FC<Props> = ({ types, styles }) => {
+  const renderTypeChip = ({ item }: { item: PokemonType }) => (
+    <Box {...styles.typeChip}>
+      <Text {...styles.typeText}>{item.type.name}</Text>
+    </Box>
+  );
+
+  const ItemSeparator = () => <Box {...styles.typeSeparator} />;
+
+  return (
+    <HStack {...styles.typesContainer}>
+      <FlatList
+        data={types}
+        renderItem={renderTypeChip}
+        keyExtractor={(item, index) => `${item.type.name}-${index}`}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        ItemSeparatorComponent={ItemSeparator}
+        contentContainerStyle={styles.typesList}
+      />
+    </HStack>
+  );
+};
 
 export default React.memo(PokemonTypes);

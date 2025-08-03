@@ -12,6 +12,7 @@ import {
   Text,
   VStack,
 } from '@gluestack-ui/themed';
+import { FlatList } from 'react-native';
 import React from 'react';
 import { BAG_CONTROLS_STYLES as styles } from './BagControls.styles';
 
@@ -48,6 +49,34 @@ const BagControls: React.FC<Props> = ({
   const clearSearch = () => {
     onFiltersChange({ ...filters, searchQuery: '' });
   };
+
+  const sortOptions = Object.values(SORT_OPTIONS);
+
+  const renderSortButton = ({
+    item,
+  }: {
+    item: (typeof SORT_OPTIONS)[keyof typeof SORT_OPTIONS];
+  }) => {
+    const isActive = filters.sortBy === item.value;
+
+    return (
+      <Pressable
+        key={item.value}
+        {...styles.sortButton}
+        {...(isActive && styles.sortButtonActive)}
+        onPress={() => handleSortChange(item.value as SortOption)}
+      >
+        <Text
+          {...styles.sortButtonText}
+          {...(isActive && styles.sortButtonTextActive)}
+        >
+          {item.label}
+        </Text>
+      </Pressable>
+    );
+  };
+
+  const SortSeparator = () => <VStack {...styles.sortSeparator} />;
 
   return (
     <VStack {...styles.container}>
@@ -99,27 +128,17 @@ const BagControls: React.FC<Props> = ({
 
       <VStack {...styles.sortMainContainer}>
         <Text {...styles.sectionTitle}>{BAG_CONTROLS_CONTENT.SORT_TITLE}</Text>
-        <HStack {...styles.sortContainer}>
-          {Object.values(SORT_OPTIONS).map(option => {
-            const isActive = filters.sortBy === option.value;
-
-            return (
-              <Pressable
-                key={option.value}
-                {...styles.sortButton}
-                {...(isActive && styles.sortButtonActive)}
-                onPress={() => handleSortChange(option.value as SortOption)}
-              >
-                <Text
-                  {...styles.sortButtonText}
-                  {...(isActive && styles.sortButtonTextActive)}
-                >
-                  {option.label}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </HStack>
+        <VStack {...styles.sortContainer}>
+          <FlatList
+            data={sortOptions}
+            renderItem={renderSortButton}
+            keyExtractor={item => item.value}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={SortSeparator}
+            contentContainerStyle={styles.sortList}
+          />
+        </VStack>
       </VStack>
 
       <HStack {...styles.statsContainer}>

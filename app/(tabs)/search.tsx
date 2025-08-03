@@ -8,7 +8,6 @@ import {
   ButtonText,
   Spinner,
   HStack,
-  ScrollView,
 } from '@gluestack-ui/themed';
 
 import { useAppDispatch, useAppSelector } from '@/src/store/hooks';
@@ -50,7 +49,7 @@ const PokemonSearchScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView {...styles.container}>
+    <VStack {...styles.container}>
       <VStack {...styles.mainVStack}>
         <Text {...styles.title}>{POKEMON_CONTENT.SEARCH_TITLE}</Text>
 
@@ -64,7 +63,7 @@ const PokemonSearchScreen: React.FC = () => {
               {POKEMON_CONTENT.SEARCH_BUTTON}
             </ButtonText>
           </Button>
-          
+
           <Input {...styles.input}>
             <InputField
               {...styles.inputField}
@@ -90,7 +89,7 @@ const PokemonSearchScreen: React.FC = () => {
 
         {!loading && !error && pokemon && <PokemonInfo pokemon={pokemon} />}
       </VStack>
-    </ScrollView>
+    </VStack>
   );
 };
 
